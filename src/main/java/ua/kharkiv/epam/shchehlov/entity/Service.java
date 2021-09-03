@@ -28,4 +28,13 @@ public class Service extends Entity {
     public void setPrice(Double price) {
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+        return "Service{" +
+                "name='" + name + '\'' +
+                ", duration=" + duration +
+                ", price=" + price +
+                '}';
+    }
 }

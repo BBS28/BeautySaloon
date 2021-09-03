@@ -1,0 +1,16 @@
+<Context>
+
+	<Resource name="jdbc/BSdb"
+		auth="Container" 
+		type="javax.sql.DataSource"
+		maxActive="100" maxIdle="30" maxWait="10000"
+		username="root"
+		password="112233"
+		driverClassName="com.mysql.jdbc.Driver"
+		defaultAutoCommit="false"
+		defaultTransactionIsolation="READ_COMMITTED"
+		connectionProperties="useUnicode=yes;characterEncoding=utf8;"
+		url="jdbc:mysql://localhost:3306/beauty_saloon_db?serverTimezone=UTC"/>
+
+</Context>
+<!--		jdbc:mysql://localhost/db?useUnicode=true&serverTimezone=UTC-->
