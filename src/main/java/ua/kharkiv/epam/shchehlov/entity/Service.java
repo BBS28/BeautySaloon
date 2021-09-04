@@ -32,7 +32,8 @@ public class Service extends Entity {
     @Override
     public String toString() {
         return "Service{" +
-                "name='" + name + '\'' +
+                "id=" + getId() +
+                ", name='" + name + '\''+
                 ", duration=" + duration +
                 ", price=" + price +
                 '}';

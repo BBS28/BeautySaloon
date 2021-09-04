@@ -21,23 +21,23 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet(urlPatterns = { "/serviceList" })
 public class ServiceList  extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
+
     public static final String PAGE_SERVICE_LIST = "/WEB-INF/jsp/serviceList.jsp";
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
+//        HttpSession session = request.getSession();
         ServiceService serviceService = new ServiceServiceImpl(new ServiceDaoImpl());
         List<Service> serviceList = serviceService.getAll();
-        System.out.println(serviceList);
-        session.setAttribute("serviceList2", serviceList);
+
         request.setAttribute("serviceList2", serviceList);
-        System.out.println(serviceList);
+//        System.out.println("2==>" + request.);
         // Сохранить информацию в request attribute перед тем как forward к views.
 //        request.setAttribute("errorString", errorString);
 //        request.setAttribute("productList", list);
-
         // Forward к /WEB-INF/views/productListView.jsp
         RequestDispatcher dispatcher = request.getServletContext()
 //                .getRequestDispatcher("/WEB-INF/views/productListView.jsp");

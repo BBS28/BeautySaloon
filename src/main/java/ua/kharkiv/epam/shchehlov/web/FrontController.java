@@ -24,17 +24,17 @@ public class FrontController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        ServiceService serviceService = new ServiceServiceImpl(new ServiceDaoImpl());
-        List<Service> serviceList = serviceService.getAll();
-        session.setAttribute("serviceList", serviceList);
-        req.setAttribute("serviceList", serviceList);
-        System.out.println(serviceList);
-//        return PAGE_SERVICE_LIST;
-
-        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher(PAGE_SERVICE_LIST);
-        dispatcher.forward(req,resp);
-//        processRequest(req, resp);
+//        HttpSession session = req.getSession();
+//        ServiceService serviceService = new ServiceServiceImpl(new ServiceDaoImpl());
+//        List<Service> serviceList = serviceService.getAll();
+//        session.setAttribute("serviceList", serviceList);
+//        req.setAttribute("serviceList", serviceList);
+//        System.out.println(serviceList);
+////        return PAGE_SERVICE_LIST;
+//
+//        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher(PAGE_SERVICE_LIST);
+//        dispatcher.forward(req,resp);
+        processRequest(req, resp);
     }
 
     @Override

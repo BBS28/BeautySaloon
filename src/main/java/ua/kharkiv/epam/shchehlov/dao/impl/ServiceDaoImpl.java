@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceDaoImpl implements ServiceDao {
-    private static final Logger log = Logger.getLogger(MasterDaoImpl.class);
+    private static final Logger log = Logger.getLogger(ServiceDaoImpl.class);
     private DBManager dbManager = DBManager.getInstance();
 
 
@@ -29,6 +29,7 @@ public class ServiceDaoImpl implements ServiceDao {
         Statement st = null;
         ResultSet rs = null;
         Connection con = null;
+        log.debug("logger works");
         try {
             con = dbManager.getConnection();
             System.out.println("==>" + con);

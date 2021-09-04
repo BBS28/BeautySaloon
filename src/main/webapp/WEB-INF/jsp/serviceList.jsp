@@ -45,7 +45,7 @@ JSTL 1.1 i18n-capable formatting library
                     <th>Duration</th>
                     <th>Price</th>
                 </tr>
-                <c:forEach items="${serviceList2}" var="service" varStatus="loop" >
+                <c:forEach items="${serviceList}" var="service" varStatus="loop">
                     <tr>
                         <td>${service.id}</td>
                         <td>${service.name}</td>
@@ -57,11 +57,10 @@ JSTL 1.1 i18n-capable formatting library
         </div>
     </div>
     <div>
-        ${sessionScope.serviceList2}
+        ${sessionScope.serviceList.name}
     </div>
     <div>
-        ${requestScope.serviceList2}
+        ${requestScope.serviceList}
     </div>
 </body>
-
 </html>

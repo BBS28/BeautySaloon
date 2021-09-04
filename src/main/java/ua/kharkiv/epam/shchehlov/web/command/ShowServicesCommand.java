@@ -8,7 +8,6 @@ import ua.kharkiv.epam.shchehlov.services.impl.ServiceServiceImpl;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -18,10 +17,9 @@ public class ShowServicesCommand extends Command{
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-       HttpSession session = request.getSession();
         ServiceService serviceService = new ServiceServiceImpl(new ServiceDaoImpl());
         List<Service> serviceList = serviceService.getAll();
-        session.setAttribute("serviceList", serviceList);
+        request.setAttribute("serviceList", serviceList);
         System.out.println(serviceList);
         return PAGE_SERVICE_LIST;
     }
