@@ -24,17 +24,15 @@ public class ServiceDaoImpl implements ServiceDao {
 
     @Override
     public List<Service> getAll() {
-        Service service = null;
         List<Service> serviceList = new ArrayList<>();
         Statement st = null;
         ResultSet rs = null;
         Connection con = null;
-        log.debug("logger works");
         try {
             con = dbManager.getConnection();
-            System.out.println("==>" + con);
             st = con.createStatement();
             rs = st.executeQuery(FIND_ALL_SERVICES);
+            Service service;
             while (rs.next()) {
                 service = extractService(rs);
                 serviceList.add(service);
@@ -114,7 +112,7 @@ public class ServiceDaoImpl implements ServiceDao {
             } catch (SQLException ex) {
                 log.error("cannot obtain categories", ex);
             }
-        }finally {
+        } finally {
             dbManager.close(con, ps);
         }
         return result;
@@ -166,12 +164,12 @@ public class ServiceDaoImpl implements ServiceDao {
             }
             con.commit();
         } catch (SQLException e) {
-           try {
-               con.rollback();
-           } catch (SQLException ex) {
-              log.error("cannot obtain categories", ex);
-           }
-        }finally {
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                log.error("cannot obtain categories", ex);
+            }
+        } finally {
             dbManager.close(con, ps);
         }
         return result;

@@ -1,58 +1,45 @@
 package ua.kharkiv.epam.shchehlov.dao.impl;
 
 import org.apache.log4j.Logger;
-import ua.kharkiv.epam.shchehlov.dao.MasterDao;
+import ua.kharkiv.epam.shchehlov.dao.ClientDao;
 import ua.kharkiv.epam.shchehlov.dao.db.Constant;
 import ua.kharkiv.epam.shchehlov.dao.db.DBManager;
-import ua.kharkiv.epam.shchehlov.entity.Master;
+import ua.kharkiv.epam.shchehlov.entity.Client;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MasterDaoImpl implements MasterDao {
-    private static final Logger log = Logger.getLogger(MasterDaoImpl.class);
+public class ClientDaoImpl implements ClientDao {
+    private static final Logger log = Logger.getLogger(ClientDaoImpl.class);
     private DBManager dbManager = DBManager.getInstance();
 
-    private static final String FIND_ALL_MASTERS =
-            "SELECT a.id a_id," +
-                    "a.login a_login," +
-                    "a.password a_password," +
-                    "a.name a_name," +
-                    "a.surname a_surname," +
-                    "a.email a_email," +
-                    "(SELECT AVG(r.rate) FROM meeting m " +
-                    "JOIN review r ON m.review_id = r.id " +
-                    "JOIN master_service ms " +
-                    "ON m.master_service_id = ms.id " +
-                    "WHERE ms.account_id = a_id " +
-                    "GROUP BY ms.account_id) avg_rate " +
-                    "FROM account a WHERE role = 'MASTER'";
-    private static final String FIND_MASTER_BY_ID = FIND_ALL_MASTERS + " AND a.id = ?";
-    private static final String FIND_MASTER_BY_SURNAME = FIND_ALL_MASTERS + " AND surname = ?";
-    private static final String DELETE_MASTER_BY_ID = "DELETE FROM account WHERE id = ?";
-    private static final String INSERT_NEW_MASTER =
+    private static final String FIND_ALL_CLIENTS = "SELECT * FROM account WHERE role = 'CLIENT'";
+    private static final String FIND_CLIENT_BY_ID = "SELECT * FROM account WHERE id = ?";
+    private static final String FIND_CLIENT_BY_LOGIN = "SELECT * FROM account WHERE surname = ? AND role= 'CLIENT'";
+    private static final String DELETE_CLIENT_BY_ID = "DELETE FROM account WHERE id = ?";
+    private static final String INSERT_NEW_CLIENT =
             "INSERT INTO account " +
                     "(login, password, role, name, surname, email) " +
-                    "VALUES (?, ?, 'MASTER', ?, ?, ?)";
+                    "VALUES (?, ?, 'CLIENT', ?, ?, ?)";
     private static final String UPDATE_MASTER_BY_ID =
             "UPDATE account " +
                     "SET login = ?, password = ?, name = ?, surname = ?, email = ? " +
-                    "WHERE id = ? AND role= 'MASTER'";
+                    "WHERE id = ? AND role= 'CLIENT'";
 
     @Override
-    public Master getBySurname(String surname) {
-        Master master = null;
+    public Client getByLogin(String login) {
+        Client client = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection con = null;
         try {
             con = dbManager.getConnection();
-            ps = con.prepareStatement(FIND_MASTER_BY_SURNAME);
-            ps.setString(1, surname);
+            ps = con.prepareStatement(FIND_CLIENT_BY_LOGIN);
+            ps.setString(1, login);
             rs = ps.executeQuery();
             while (rs.next()) {
-                master = extractMaster(rs);
+                client = extractClient(rs);
             }
             con.commit();
         } catch (SQLException ex) {
@@ -60,23 +47,23 @@ public class MasterDaoImpl implements MasterDao {
         } finally {
             dbManager.close(con, ps, rs);
         }
-        return master;
+        return client;
     }
 
     @Override
-    public List<Master> getAll() {
-        List<Master> masterList = new ArrayList<>();
+    public List<Client> getAll() {
+        List<Client> clientList = new ArrayList<>();
         Statement st = null;
         ResultSet rs = null;
         Connection con = null;
         try {
             con = dbManager.getConnection();
             st = con.createStatement();
-            rs = st.executeQuery(FIND_ALL_MASTERS);
-            Master master;
+            rs = st.executeQuery(FIND_ALL_CLIENTS);
+            Client client;
             while (rs.next()) {
-                master = extractMaster(rs);
-                masterList.add(master);
+                client = extractClient(rs);
+                clientList.add(client);
             }
             con.commit();
         } catch (SQLException ex) {
@@ -84,22 +71,22 @@ public class MasterDaoImpl implements MasterDao {
         } finally {
             dbManager.close(con, st, rs);
         }
-        return masterList;
+        return clientList;
     }
 
     @Override
-    public Master getById(Long masterId) {
-        Master master = null;
+    public Client getById(Long clientId) {
+        Client client = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection con = null;
         try {
             con = dbManager.getConnection();
-            ps = con.prepareStatement(FIND_MASTER_BY_ID);
-            ps.setLong(1, masterId);
+            ps = con.prepareStatement(FIND_CLIENT_BY_ID);
+            ps.setLong(1, clientId);
             rs = ps.executeQuery();
             while (rs.next()) {
-                master = extractMaster(rs);
+                client = extractClient(rs);
             }
             con.commit();
         } catch (SQLException ex) {
@@ -107,19 +94,19 @@ public class MasterDaoImpl implements MasterDao {
         } finally {
             dbManager.close(con, ps, rs);
         }
-        return master;
+        return client;
     }
 
     @Override
-    public boolean deleteById(Long id) {
+    public boolean deleteById(Long clientId) {
         PreparedStatement ps = null;
         Connection con = null;
         boolean result = false;
         try {
             con = dbManager.getConnection();
             con.setAutoCommit(false);
-            ps = con.prepareStatement(DELETE_MASTER_BY_ID);
-            ps.setLong(1, id);
+            ps = con.prepareStatement(DELETE_CLIENT_BY_ID);
+            ps.setLong(1, clientId);
             if (ps.executeUpdate() > 0) {
                 result = true;
             }
@@ -137,23 +124,23 @@ public class MasterDaoImpl implements MasterDao {
     }
 
     @Override
-    public Master insert(Master master) {
+    public Client insert(Client client) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection con = null;
         try {
             con = dbManager.getConnection();
-            ps = con.prepareStatement(INSERT_NEW_MASTER, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, master.getLogin());
-            ps.setString(2, master.getPassword());
-            ps.setString(3, master.getName());
-            ps.setString(4, master.getSurname());
-            ps.setString(5, master.getEmail());
+            ps = con.prepareStatement(INSERT_NEW_CLIENT, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, client.getLogin());
+            ps.setString(2, client.getPassword());
+            ps.setString(3, client.getName());
+            ps.setString(4, client.getSurname());
+            ps.setString(5, client.getEmail());
             if (ps.executeUpdate() > 0) {
                 rs = ps.getGeneratedKeys();
                 if (rs.next()) {
-                    Long serviceId = rs.getLong(1);
-                    master.setId(serviceId);
+                    Long clientId = rs.getLong(1);
+                    client.setId(clientId);
                 }
             }
             con.commit();
@@ -162,11 +149,11 @@ public class MasterDaoImpl implements MasterDao {
         } finally {
             dbManager.close(con, ps, rs);
         }
-        return master;
+        return client;
     }
 
     @Override
-    public boolean update(Master master) {
+    public boolean update(Client client) {
         PreparedStatement ps = null;
         Connection con = null;
         boolean result = false;
@@ -175,12 +162,12 @@ public class MasterDaoImpl implements MasterDao {
             con.setAutoCommit(false);
             con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             ps = con.prepareStatement(UPDATE_MASTER_BY_ID);
-            ps.setString(1, master.getLogin());
-            ps.setString(2, master.getPassword());
-            ps.setString(3, master.getName());
-            ps.setString(4, master.getSurname());
-            ps.setString(5, master.getEmail());
-            ps.setLong(6, master.getId());
+            ps.setString(1, client.getLogin());
+            ps.setString(2, client.getPassword());
+            ps.setString(3, client.getName());
+            ps.setString(4, client.getSurname());
+            ps.setString(5, client.getEmail());
+            ps.setLong(6, client.getId());
             if (ps.executeUpdate() > 0) {
                 result = true;
             }
@@ -197,17 +184,14 @@ public class MasterDaoImpl implements MasterDao {
         return result;
     }
 
-    private Master extractMaster(ResultSet rs) throws SQLException {
-        Master master = new Master();
-        master.setId(rs.getLong(Constant.MASTER_ID));
-        master.setLogin(rs.getString(Constant.MASTER_LOGIN));
-        master.setPassword(rs.getString(Constant.MASTER_PASSWORD));
-        master.setName(rs.getString(Constant.MASTER_NAME));
-        master.setSurname(rs.getString(Constant.MASTER_SURNAME));
-        master.setEmail(rs.getString(Constant.MASTER_EMAIL));
-        master.setRate(rs.getDouble(Constant.MASTER_RATE));
-        return master;
+    private Client extractClient(ResultSet rs) throws SQLException {
+        Client client = new Client();
+        client.setId(rs.getLong(Constant.ENTITY_ID));
+        client.setLogin(rs.getString(Constant.ACCOUNT_LOGIN));
+        client.setPassword(rs.getString(Constant.ACCOUNT_PASSWORD));
+        client.setName(rs.getString(Constant.ACCOUNT_NAME));
+        client.setSurname(rs.getString(Constant.ACCOUNT_SURNAME));
+        client.setEmail(rs.getString(Constant.ACCOUNT_EMAIL));
+        return client;
     }
-
-
 }

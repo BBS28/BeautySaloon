@@ -6,7 +6,7 @@
 		maxActive="100" maxIdle="30" maxWait="10000"
 		username="root"
 		password="112233"
-		driverClassName="com.mysql.jdbc.Driver"
+		driverClassName="com.mysql.cj.jdbc.Driver"
 		defaultAutoCommit="false"
 		defaultTransactionIsolation="READ_COMMITTED"
 		connectionProperties="useUnicode=yes;characterEncoding=utf8;"
