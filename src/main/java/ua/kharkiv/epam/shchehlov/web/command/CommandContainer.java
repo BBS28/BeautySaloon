@@ -13,6 +13,8 @@ public class CommandContainer {
     static {
         commands.put("showServices", new ShowServicesCommand());
         commands.put("showMasterServices", new ShowMasterServiceCommand());
+        commands.put("showTimeSlots", new TimeSlotsCommand());
+        commands.put("createMeeting", new CreateMeetingCommand());
     }
 
     public static Command get(String commandName) {

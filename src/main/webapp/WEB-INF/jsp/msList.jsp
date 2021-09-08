@@ -8,6 +8,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html>
 <head>
@@ -29,6 +30,7 @@
                     <th>Service Duration</th>
                     <th>Service Price</th>
                     <th>Master rate</th>
+                    <th>See timetable</th>
                 </tr>
                 <c:forEach items="${msList}" var="ms" varStatus="loop">
                     <tr>
@@ -41,6 +43,11 @@
                         <td>${ms.service.duration}</td>
                         <td>${ms.service.price}</td>
                         <td>${ms.master.rate}</td>
+                        <td>
+                            <a href="/BeautySaloon_war/controller?command=showTimeSlots&msId=${ms.id}">
+                                <fmt:message key="button.timetable"/>
+                            </a>
+                        </td>
                     </tr>
                 </c:forEach>
             </table>

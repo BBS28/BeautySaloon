@@ -21,21 +21,21 @@ public class MasterServiceServiceImpl implements MasterServiceService {
 
     @Override
     public MasterService getById(Long id) {
-        return null;
+        return msDao.getById(id);
     }
 
     @Override
     public boolean deleteById(Long id) {
-        return false;
+        return msDao.deleteById(id);
     }
 
     @Override
     public MasterService insert(MasterService item) {
-        return null;
+        return msDao.insert(item);
     }
 
     @Override
     public boolean update(MasterService item) {
-        return false;
+        return msDao.update(item);
     }
 }

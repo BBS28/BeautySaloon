@@ -7,8 +7,11 @@ import ua.kharkiv.epam.shchehlov.dao.db.DBManager;
 import ua.kharkiv.epam.shchehlov.entity.*;
 
 import java.sql.*;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MeetingDaoImpl implements MeetingDao {
     private static final Logger log = Logger.getLogger(MeetingDaoImpl.class);
@@ -19,11 +22,11 @@ public class MeetingDaoImpl implements MeetingDao {
     private static final String DELETE_MEETING_BY_ID = "DELETE FROM meeting WHERE id = ?";
     private static final String INSERT_NEW_MEETING =
             "INSERT INTO meeting " +
-                    "(condition, account_id, master_service_id, meet_time) " +
+                    "(meeting.condition, meeting.account_id, meeting.master_service_id, meeting.meet_time) " +
                     "VALUES (?, ?, ?, ?)";
     private static final String UPDATE_MEETING_BY_ID =
             "UPDATE service " +
-                    "SET condition = ?, account_id = ?, review_id = ?, master_service_id = ?, meet_time = ?" +
+                    "SET service.condition = ?, account_id = ?, review_id = ?, master_service_id = ?, meet_time = ?" +
                     " WHERE id = ?";
 
 
@@ -111,7 +114,11 @@ public class MeetingDaoImpl implements MeetingDao {
             ps.setString(1, meeting.getCondition().toString());
             ps.setLong(2, meeting.getClient().getId());
             ps.setLong(3, meeting.getMasterService().getId());
-            ps.setTimestamp(4, Timestamp.valueOf(meeting.getDateTime()));
+            ps.setTimestamp(4, Timestamp.valueOf(meeting.getDateTime()
+                    .plusHours(3)
+                    .atZone(ZoneId.of("UTC"))
+                    .format(DateTimeFormatter
+                            .ofPattern("uuuu-MM-dd HH:mm:ss"))));
             if (ps.executeUpdate() > 0) {
                 rs = ps.getGeneratedKeys();
                 if (rs.next()) {
@@ -140,11 +147,15 @@ public class MeetingDaoImpl implements MeetingDao {
             ps = con.prepareStatement(UPDATE_MEETING_BY_ID);
             ps.setString(1, meeting.getCondition().toString());
             ps.setLong(2, meeting.getClient().getId());
-            if (meeting.getReviewId() !=  0) {
+            if (meeting.getReviewId() != 0) {
                 ps.setLong(3, meeting.getReviewId());
             }
             ps.setLong(4, meeting.getMasterService().getId());
-            ps.setTimestamp(5, Timestamp.valueOf(meeting.getDateTime()));
+            ps.setTimestamp(5, Timestamp.valueOf(meeting.getDateTime()
+                    .plusHours(3)
+                    .atZone(ZoneId.of("UTC"))
+                    .format(DateTimeFormatter
+                            .ofPattern("uuuu-MM-dd HH:mm:ss"))));
             ps.setLong(6, meeting.getId());
             if (ps.executeUpdate() > 0) {
                 result = true;
@@ -166,13 +177,19 @@ public class MeetingDaoImpl implements MeetingDao {
         Meeting meeting = new Meeting();
         meeting.setId(rs.getLong(Constant.ENTITY_ID));
         switch (rs.getString(Constant.MEETING_CONDITION)) {
-            case "ACTIVE" : meeting.setCondition(Condition.ACTIVE);
-            case "PAID" : meeting.setCondition(Condition.PAID);
-            case "DONE" : meeting.setCondition(Condition.DONE);
+            case "ACTIVE":
+                meeting.setCondition(Condition.ACTIVE);
+                break;
+            case "PAID":
+                meeting.setCondition(Condition.PAID);
+                break;
+            case "DONE":
+                meeting.setCondition(Condition.DONE);
+                break;
         }
         meeting.setClient(new ClientDaoImpl().getById(rs.getLong(Constant.MEETING_ACCOUNT_ID)));
         meeting.setMasterService(new MasterServiceDaoImpl().getById(rs.getLong(Constant.MEETING_MASTER_SERVICE_ID)));
-        meeting.setDateTime(rs.getTimestamp(Constant.MEETING_MEET_TIME).toLocalDateTime());
+        meeting.setDateTime(rs.getTimestamp(Constant.MEETING_MEET_TIME).toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
         meeting.setReviewId(rs.getLong(Constant.MEETING_REVIEW_ID));
         return meeting;
     }
