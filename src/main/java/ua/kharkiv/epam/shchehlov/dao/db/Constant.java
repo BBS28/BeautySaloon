@@ -18,6 +18,7 @@ public class Constant {
     public static final String ACCOUNT_NAME = "name";
     public static final String ACCOUNT_SURNAME = "surname";
     public static final String ACCOUNT_EMAIL = "email";
+    public static final String ACCOUNT_ROLE = "role";
 
     public static final String MASTER_ID = "a_id";
     public static final String MASTER_LOGIN = "a_login";
