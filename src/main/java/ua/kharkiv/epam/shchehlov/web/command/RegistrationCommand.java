@@ -19,7 +19,6 @@ public class RegistrationCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        HttpSession session = request.getSession();
         if ("POST".equalsIgnoreCase(request.getMethod())) {
             try {
                 String login = request.getParameter("login");

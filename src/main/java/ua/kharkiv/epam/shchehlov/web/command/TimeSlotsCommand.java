@@ -1,15 +1,15 @@
 package ua.kharkiv.epam.shchehlov.web.command;
 
 import org.apache.log4j.Logger;
-import ua.kharkiv.epam.shchehlov.dao.impl.MasterServiceDaoImpl;
+import ua.kharkiv.epam.shchehlov.dao.impl.CatalogDaoImpl;
 import ua.kharkiv.epam.shchehlov.dao.impl.MeetingDaoImpl;
 import ua.kharkiv.epam.shchehlov.entity.Condition;
 import ua.kharkiv.epam.shchehlov.entity.Master;
-import ua.kharkiv.epam.shchehlov.entity.MasterService;
+import ua.kharkiv.epam.shchehlov.entity.Catalog;
 import ua.kharkiv.epam.shchehlov.entity.Meeting;
-import ua.kharkiv.epam.shchehlov.services.MasterServiceService;
+import ua.kharkiv.epam.shchehlov.services.CatalogService;
 import ua.kharkiv.epam.shchehlov.services.MeetingService;
-import ua.kharkiv.epam.shchehlov.services.impl.MasterServiceServiceImpl;
+import ua.kharkiv.epam.shchehlov.services.impl.CatalogServiceImpl;
 import ua.kharkiv.epam.shchehlov.services.impl.MeetingServiceImpl;
 
 import javax.servlet.ServletException;
@@ -27,18 +27,18 @@ public class TimeSlotsCommand extends Command{
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        MasterServiceService msService = new MasterServiceServiceImpl(new MasterServiceDaoImpl());
+        CatalogService catalogService = new CatalogServiceImpl(new CatalogDaoImpl());
         log.debug("msId= " + request.getParameter("msId"));
 
         long masterServiceId = Long.parseLong(String.valueOf(request.getParameter("msId")));
-        MasterService masterService = msService.getById(masterServiceId);
-        Master master = masterService.getMaster();
+        Catalog catalog = catalogService.getById(masterServiceId);
+        Master master = catalog.getMaster();
         log.debug("master = " + master);
-        List<MasterService> msList = msService.getAll();
-        List<MasterService> allMasterServices = new ArrayList<>();
-        for (MasterService ms : msList){
-            if (ms.getMaster().getId().equals(master.getId())) {
-                allMasterServices.add(ms);
+        List<Catalog> catalogList = catalogService.getAll();
+        List<Catalog> allCatalogs = new ArrayList<>();
+        for (Catalog c : catalogList){
+            if (c.getMaster().getId().equals(master.getId())) {
+                allCatalogs.add(c);
 //                log.debug("added masterService" + ms.getId() + " " + ms.getMaster().getSurname() + " to allMasterServices");
             }
         }
@@ -49,8 +49,8 @@ public class TimeSlotsCommand extends Command{
         List<Meeting> allMasterMeetings = new ArrayList<>();
         for (Meeting m : meetings) {
             log.debug(m.getId() + " " + m.getCondition());
-            for (MasterService ms : allMasterServices) {
-                if (m.getMasterService().getId().equals(ms.getId())) {
+            for (Catalog ms : allCatalogs) {
+                if (m.getCatalog().getId().equals(ms.getId())) {
                     allMasterMeetings.add(m);
 //                    log.debug("added " + m + " to allMasterMeetings" + " master - " + m.getMasterService().getMaster().getSurname() +
 //                            " condition = " + m.getCondition());
@@ -62,13 +62,11 @@ public class TimeSlotsCommand extends Command{
             log.debug("allMasterMeetings, element - " + m.getCondition() + " " + m.getDateTime());
         }
 
-        //All meeting's date, time & durations of services
+        //All ACTIVE meeting's date, time
         List<LocalDateTime> masterRegistrations = new ArrayList<>();
         for (Meeting m : allMasterMeetings) {
-//            log.debug("Meeeting iteration: " + m.getCondition() + " " + m.getId());
             if (m.getCondition().equals(Condition.ACTIVE)) {
                 masterRegistrations.add(m.getDateTime());
-//                log.debug("masterRegistrations key = " + m.getDateTime() + " masterRegistrations value = " + m.getMasterService().getService().getDuration());
             }
         }
 
@@ -76,20 +74,10 @@ public class TimeSlotsCommand extends Command{
             log.debug("masterRegistrations, element - " + m);
         }
 
-        //Schedule
-        List<LocalDateTime> emptySchedule = new ArrayList<>();
-        LocalDateTime dateTime = LocalDateTime.now();
-        dateTime = dateTime.minusMinutes(dateTime.getMinute());
-        dateTime = dateTime.minusSeconds(dateTime.getSecond());
-        dateTime = dateTime.minusNanos(dateTime.getNano());
-        int delta = 18 - dateTime.getHour();
-        for (int i = 1; i < 24 * 14 + delta; i++) {
-            LocalDateTime timeCell = dateTime.plusHours(i);
-            if (timeCell.getHour() < 18 && timeCell.getHour() > 8 && !timeCell.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-                emptySchedule.add(timeCell);
-            }
-        }
+        //Creating empty slots
+        List<LocalDateTime> emptySchedule = createEmptyFutureSchedule(14);
 
+        //
         Map<LocalDateTime, Boolean> schedule = new LinkedHashMap<>();
         for (LocalDateTime t : emptySchedule) {
             schedule.put(t, false);
@@ -104,8 +92,26 @@ public class TimeSlotsCommand extends Command{
 
         request.setAttribute("masterRegistrations", masterRegistrations);
         request.setAttribute("schedule", schedule);
-        request.setAttribute("ms", masterService);
+        request.setAttribute("ms", catalog);
 
         return PAGE_TIME_SLOTS_LIST;
     }
+
+    private List<LocalDateTime> createEmptyFutureSchedule (int days) {
+        List<LocalDateTime> emptySchedule = new ArrayList<>();
+        LocalDateTime dateTime = LocalDateTime.now();
+        dateTime = dateTime.minusMinutes(dateTime.getMinute());
+        dateTime = dateTime.minusSeconds(dateTime.getSecond());
+        dateTime = dateTime.minusNanos(dateTime.getNano());
+        int delta = 18 - dateTime.getHour();
+        for (int i = 1; i < 24 * days + delta; i++) {
+            LocalDateTime timeCell = dateTime.plusHours(i);
+            if (timeCell.getHour() < 18 && timeCell.getHour() > 8 && !timeCell.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+                emptySchedule.add(timeCell);
+            }
+        }
+        return emptySchedule;
+    }
+
+
 }

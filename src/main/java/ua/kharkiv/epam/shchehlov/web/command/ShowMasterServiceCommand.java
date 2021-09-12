@@ -1,9 +1,9 @@
 package ua.kharkiv.epam.shchehlov.web.command;
 
-import ua.kharkiv.epam.shchehlov.dao.impl.MasterServiceDaoImpl;
-import ua.kharkiv.epam.shchehlov.entity.MasterService;
-import ua.kharkiv.epam.shchehlov.services.MasterServiceService;
-import ua.kharkiv.epam.shchehlov.services.impl.MasterServiceServiceImpl;
+import ua.kharkiv.epam.shchehlov.dao.impl.CatalogDaoImpl;
+import ua.kharkiv.epam.shchehlov.entity.Catalog;
+import ua.kharkiv.epam.shchehlov.services.CatalogService;
+import ua.kharkiv.epam.shchehlov.services.impl.CatalogServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +17,8 @@ public class ShowMasterServiceCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        MasterServiceService ms = new MasterServiceServiceImpl(new MasterServiceDaoImpl());
-        List<MasterService> msList = ms.getAll();
+        CatalogService ms = new CatalogServiceImpl(new CatalogDaoImpl());
+        List<Catalog> msList = ms.getAll();
         request.setAttribute("msList", msList);
 
 

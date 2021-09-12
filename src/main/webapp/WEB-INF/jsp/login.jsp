@@ -32,9 +32,9 @@
             <input type="password" name="password" id="password" class="form-control" placeholder="password"><br><br>
         </div>
 
-        <input type="submit" class="btn btn-outline-success" value="Submit">
+        <input type="submit" class="btn btn-outline-success" value="    Submit    ">
         <a class="text-danger">
-            ${warn}!
+            ${warn}
         </a><br><br>
     </form>
     <a href="/BeautySaloon_war/controller?command=registration" role="button"
@@ -43,7 +43,7 @@
     <br>
     <br>
     <a href="/BeautySaloon_war/controller?command=showMasterServices" role="button"
-       class="btn btn-outline-secondary">Guest</a>
+       class="btn btn-outline-secondary">        Guest        </a>
 </body>
 </html>
 

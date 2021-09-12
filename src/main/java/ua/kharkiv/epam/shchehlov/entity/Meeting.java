@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class Meeting extends Entity {
     private Account client;
-    private MasterService masterService;
+    private Catalog catalog;
     private Condition condition;
     private LocalDateTime dateTime;
     private long reviewId;
@@ -17,12 +17,12 @@ public class Meeting extends Entity {
         this.client = client;
     }
 
-    public MasterService getMasterService() {
-        return masterService;
+    public Catalog getCatalog() {
+        return catalog;
     }
 
-    public void setMasterService(MasterService masterService) {
-        this.masterService = masterService;
+    public void setCatalog(Catalog catalog) {
+        this.catalog = catalog;
     }
 
     public Condition getCondition() {

@@ -113,7 +113,7 @@ public class MeetingDaoImpl implements MeetingDao {
             ps = con.prepareStatement(INSERT_NEW_MEETING, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, meeting.getCondition().toString());
             ps.setLong(2, meeting.getClient().getId());
-            ps.setLong(3, meeting.getMasterService().getId());
+            ps.setLong(3, meeting.getCatalog().getId());
             ps.setTimestamp(4, Timestamp.valueOf(meeting.getDateTime()
                     .plusHours(3)
                     .atZone(ZoneId.of("UTC"))
@@ -150,7 +150,7 @@ public class MeetingDaoImpl implements MeetingDao {
             if (meeting.getReviewId() != 0) {
                 ps.setLong(3, meeting.getReviewId());
             }
-            ps.setLong(4, meeting.getMasterService().getId());
+            ps.setLong(4, meeting.getCatalog().getId());
             ps.setTimestamp(5, Timestamp.valueOf(meeting.getDateTime()
                     .plusHours(3)
                     .atZone(ZoneId.of("UTC"))
@@ -188,7 +188,7 @@ public class MeetingDaoImpl implements MeetingDao {
                 break;
         }
         meeting.setClient(new ClientDaoImpl().getById(rs.getLong(Constant.MEETING_ACCOUNT_ID)));
-        meeting.setMasterService(new MasterServiceDaoImpl().getById(rs.getLong(Constant.MEETING_MASTER_SERVICE_ID)));
+        meeting.setCatalog(new CatalogDaoImpl().getById(rs.getLong(Constant.MEETING_MASTER_SERVICE_ID)));
         meeting.setDateTime(rs.getTimestamp(Constant.MEETING_MEET_TIME).toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
         meeting.setReviewId(rs.getLong(Constant.MEETING_REVIEW_ID));
         return meeting;

@@ -135,5 +135,10 @@
            class="btn btn-success" role="button">Log Out</a>
     </c:if>
 
+    <c:if test="${role == 'master'}">
+        <a href="/BeautySaloon_war/controller?command=masterSchedule"
+           class="btn btn-success" role="button">Schedule</a>
+    </c:if>
+
 </body>
 </html>

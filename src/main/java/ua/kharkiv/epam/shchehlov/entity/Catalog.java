@@ -1,6 +1,6 @@
 package ua.kharkiv.epam.shchehlov.entity;
 
-public class MasterService extends Entity {
+public class Catalog extends Entity {
     private Master master;
     private Service service;
 

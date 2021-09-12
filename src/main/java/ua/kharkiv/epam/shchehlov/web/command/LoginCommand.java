@@ -32,7 +32,7 @@ public class LoginCommand extends Command {
                 log.debug(String.format("%s %s signed in", account.getClass().getSimpleName(), account.getLogin()));
                 String role = account.getRole().toString().toLowerCase();
                 session.setAttribute("role", role);
-                session.setAttribute("account", account);
+                session.setAttribute("accountID", account.getId());
                 log.debug(String.format("role ==> %s", role));
                 return "/controller?command=showMasterServices";
             } catch (AccountDataException ex) {
