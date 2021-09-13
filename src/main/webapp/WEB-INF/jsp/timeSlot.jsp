@@ -43,7 +43,7 @@ Service: ${ms.service.name}
                         <c:if test="${cell.value == false}">
                             <td>
                                 <a href="/BeautySaloon_war/controller?command=createMeeting&clientId=1&msId=${ms.id}&time=${cell.key}"
-                                   class="btn btn-success" role="button">
+                                   class="btn btn-primary" role="button">
                                     CHOOSE THIS
                                 </a>
                             </td>

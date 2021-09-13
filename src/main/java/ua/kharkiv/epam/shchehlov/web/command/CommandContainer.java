@@ -19,6 +19,8 @@ public class CommandContainer {
         commands.put("logOut", new LogoutCommand());
         commands.put("registration", new RegistrationCommand());
         commands.put("masterSchedule", new MasterScheduleCommand());
+        commands.put("doneService", new DoneServiceCommand());
+        commands.put("clientCabinet", new ClientCabinetCommand());
     }
 
     public static Command get(String commandName) {

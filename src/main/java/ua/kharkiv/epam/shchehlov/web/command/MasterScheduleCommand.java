@@ -59,6 +59,7 @@ public class MasterScheduleCommand extends Command {
                 }
             }
         }
+
         int daysFromNow;
         if (request.getParameter("scheduleDay") == null) {
             daysFromNow = 0;
@@ -66,11 +67,19 @@ public class MasterScheduleCommand extends Command {
             daysFromNow = Integer.parseInt(request.getParameter("scheduleDay"));
         }
 
+        log.debug(daysFromNow);
         DayOfWeek dayOfWeek = null;
+
         List<LocalDateTime> emptyDailySchedule = createEmptyDailySchedule(daysFromNow);
         for (LocalDateTime d : emptyDailySchedule) {
             log.debug(d.getDayOfWeek());
             dayOfWeek = d.getDayOfWeek();
+        }
+
+        if (dayOfWeek.equals(DayOfWeek.SUNDAY)) {
+            daysFromNow++;
+            emptyDailySchedule = createEmptyDailySchedule(daysFromNow);
+            dayOfWeek = DayOfWeek.MONDAY;
         }
 
         Map<LocalDateTime, Meeting> masterDaySchedule = new LinkedHashMap<>();
@@ -85,6 +94,7 @@ public class MasterScheduleCommand extends Command {
         request.setAttribute("master", master);
         request.setAttribute("daysFromNow", daysFromNow);
         request.setAttribute("dayOfWeek", dayOfWeek);
+        request.setAttribute("currentTime", LocalDateTime.now());
 
         return "/WEB-INF/jsp/masterSchedule.jsp";
     }
@@ -92,18 +102,23 @@ public class MasterScheduleCommand extends Command {
     private List<LocalDateTime> createEmptyDailySchedule(int daysFromNow) {
         List<LocalDateTime> emptySchedule = new ArrayList<>();
         LocalDateTime dateTime = LocalDateTime.now();
+        log.debug(dateTime);
         dateTime = dateTime.minusHours(dateTime.getHour() - 8);
         dateTime = dateTime.minusMinutes(dateTime.getMinute());
         dateTime = dateTime.minusSeconds(dateTime.getSecond());
         dateTime = dateTime.minusNanos(dateTime.getNano());
+        log.debug(dateTime);
         int deltaWorkDay = 24 * daysFromNow;
+        log.debug(deltaWorkDay);
         int deltaWorkHours = 18 - dateTime.getHour();
+        log.debug(deltaWorkHours);
         for (int i = deltaWorkDay; i < deltaWorkDay + deltaWorkHours; i++) {
             LocalDateTime timeCell = dateTime.plusHours(i);
-            if (timeCell.getHour() < 18 && timeCell.getHour() > 8 && !timeCell.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+            if (timeCell.getHour() < 18 && timeCell.getHour() > 8 ) {
                 emptySchedule.add(timeCell);
             }
         }
+        log.debug(emptySchedule);
         return emptySchedule;
     }
 }

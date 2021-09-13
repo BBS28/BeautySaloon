@@ -25,8 +25,8 @@ public class MeetingDaoImpl implements MeetingDao {
                     "(meeting.condition, meeting.account_id, meeting.master_service_id, meeting.meet_time) " +
                     "VALUES (?, ?, ?, ?)";
     private static final String UPDATE_MEETING_BY_ID =
-            "UPDATE service " +
-                    "SET service.condition = ?, account_id = ?, review_id = ?, master_service_id = ?, meet_time = ?" +
+            "UPDATE meeting " +
+                    "SET meeting.condition = ?, meeting.account_id = ?, meeting.review_id = ?, meeting.master_service_id = ?, meeting.meet_time = ?" +
                     " WHERE id = ?";
 
 
@@ -147,8 +147,11 @@ public class MeetingDaoImpl implements MeetingDao {
             ps = con.prepareStatement(UPDATE_MEETING_BY_ID);
             ps.setString(1, meeting.getCondition().toString());
             ps.setLong(2, meeting.getClient().getId());
+            Integer nullInt = null;
             if (meeting.getReviewId() != 0) {
                 ps.setLong(3, meeting.getReviewId());
+            }else {
+                ps.setNull(3,  Types.BIGINT);
             }
             ps.setLong(4, meeting.getCatalog().getId());
             ps.setTimestamp(5, Timestamp.valueOf(meeting.getDateTime()
@@ -157,12 +160,15 @@ public class MeetingDaoImpl implements MeetingDao {
                     .format(DateTimeFormatter
                             .ofPattern("uuuu-MM-dd HH:mm:ss"))));
             ps.setLong(6, meeting.getId());
+            ps.executeUpdate();
             if (ps.executeUpdate() > 0) {
                 result = true;
             }
             con.commit();
         } catch (SQLException e) {
+            log.error(e.getMessage(), e);
             try {
+                log.debug("rollback");
                 con.rollback();
             } catch (SQLException ex) {
                 log.error("cannot obtain categories", ex);

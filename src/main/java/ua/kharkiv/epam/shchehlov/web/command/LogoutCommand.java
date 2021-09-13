@@ -19,7 +19,7 @@ public class LogoutCommand extends Command{
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.setAttribute("role", "guest");
-            session.removeAttribute("account");
+            session.removeAttribute("accountID");
             log.debug(session.getAttribute("role"));
         }
 

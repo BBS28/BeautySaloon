@@ -18,32 +18,36 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-
-    <h2>LOGIN</h2>
-
-    <form method="post" action="/BeautySaloon_war/controller?command=logIn">
-        <div class="col-sm-3 my-1">
-            <label for="login">Login:</label><br>
-            <input type="text" name="login" id="login" class="form-control" placeholder="login"><br>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <h2>BEAUTY SALOON</h2>
+                <form method="post" action="/BeautySaloon_war/controller?command=logIn">
+                    <div class="form-group">
+                        <label for="login">Login:</label><br>
+                        <input type="text" name="login" id="login" class="form-control" placeholder="login">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label><br>
+                        <input type="password" name="password" id="password" class="form-control"
+                               placeholder="password">
+                    </div>
+                    <input type="submit" class="btn btn-outline-success" value="    Submit    ">
+                    <a class="text-danger">
+                        ${warn}
+                    </a><br><br>
+                </form>
+                <a href="/BeautySaloon_war/controller?command=registration" role="button"
+                   class="btn btn-outline-info">Registration</a>
+                <br>
+                <br>
+                <a href="/BeautySaloon_war/controller?command=showMasterServices" role="button"
+                   class="btn btn-outline-secondary"> Guest </a>
+            </div>
+            <div class="col-sm"></div>
         </div>
-
-        <div class="col-sm-3 my-1">
-            <label for="password">Password:</label><br>
-            <input type="password" name="password" id="password" class="form-control" placeholder="password"><br><br>
-        </div>
-
-        <input type="submit" class="btn btn-outline-success" value="    Submit    ">
-        <a class="text-danger">
-            ${warn}
-        </a><br><br>
-    </form>
-    <a href="/BeautySaloon_war/controller?command=registration" role="button"
-       class="btn btn-outline-info">Registration</a>
-
-    <br>
-    <br>
-    <a href="/BeautySaloon_war/controller?command=showMasterServices" role="button"
-       class="btn btn-outline-secondary">        Guest        </a>
+    </div>
 </body>
 </html>
 
