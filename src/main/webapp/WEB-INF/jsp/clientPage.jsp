@@ -20,22 +20,20 @@
     <div class="container">
         <h2>Client's Cabinet</h2>
         <div class="row">
-
             <div class="col-sm-3 col-md-2">
                 <p>Login: ${client.login}</p>
                 <p>Name: ${client.name}</p>
                 <p>Surname: ${client.surname}</p>
                 <p>Email: ${client.email}</p>
-                <p href="/BeautySaloon_war/controller?command=logOut"
-                   class="btn btn-danger" role="button">Log Out</p>
+                <a href="/BeautySaloon_war/controller?command=logOut"
+                   class="btn btn-danger" role="button">Log Out</a>
                 <p></p>
                 <a href="/BeautySaloon_war/controller?command=showMasterServices" role="button"
                    class="btn btn-success">Services</a>
                 <p></p>
             </div>
-
             <div class="col-sm-9 col-md-8">
-                <h2>Your Visits</h2>
+                <h3>Your Visits</h3>
                 <table class="table">
                     <tr>
                         <th>Week Day</th>
@@ -44,37 +42,28 @@
                         <th>Service</th>
                         <th>Master</th>
                         <th>Status</th>
-                        <th>Review</th>
+                        <th></th>
                     </tr>
                     <c:forEach items="${clientMeetings}" var="cell" varStatus="loop">
                         <tr>
                             <td>${cell.dateTime.dayOfWeek}</td>
-                            <td>${cell.dateTime.month}, ${cell.dateTime.dayOfMonth}</td>
+                            <td nowrap>${cell.dateTime.month}, ${cell.dateTime.dayOfMonth}</td>
                             <td>${cell.dateTime.hour} : 00</td>
                             <td>${cell.catalog.service.name}</td>
                             <td>${cell.catalog.master.name} ${cell.catalog.master.surname}</td>
                             <td>${cell.condition}</td>
                             <td>
-                                <c:choose>
-                                    <c:when test="${cell.reviewId != 0}">
-                                        <a href="/BeautySaloon_war/controller?command="
-                                           class="btn btn-success" role="button">
-                                            Leave Feedback
-                                        </a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a href="/BeautySaloon_war/controller?command="
-                                           class="btn btn-primary" role="button">
-                                            Read Feedback
-                                        </a>
-                                    </c:otherwise>
-                                </c:choose>
+                                <c:if test="${cell.reviewId == 0 and (cell.condition eq 'DONE' or cell.condition eq 'PAID')}">
+                                    <a href="/BeautySaloon_war/controller?command=leaveReview&meetingId=${cell.id}"
+                                       class="btn btn-primary" role="button">
+                                        Leave Feedback
+                                    </a>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>
                 </table>
             </div>
-
         </div>
     </div>
 </body>

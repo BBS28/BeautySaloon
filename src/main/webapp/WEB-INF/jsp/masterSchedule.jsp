@@ -26,8 +26,8 @@
             <p>Name: ${master.name}</p>
             <p>Surname: ${master.surname}</p>
             <p>Email: ${master.email}</p>
-            <p href="/BeautySaloon_war/controller?command=logOut"
-               class="btn btn-danger" role="button">Log Out</p>
+            <a href="/BeautySaloon_war/controller?command=logOut"
+               class="btn btn-danger" role="button">Log Out</a>
             <p></p>
             <a href="/BeautySaloon_war/controller?command=showMasterServices" role="button"
                class="btn btn-success">Services</a>
@@ -35,7 +35,7 @@
         </div>
 
         <div class="col-sm-9 col-md-8">
-            <h2>Your Schedule</h2>
+            <h3>Your Schedule</h3>
             <table class="table">
                 <tr>
                     <th>Week Day</th>
@@ -64,13 +64,13 @@
                             <td>
                                 <c:choose>
                                     <c:when test="${cell.value.condition eq 'ACTIVE' and cell.key < currentTime}">
-                                        <a href="/BeautySaloon_war/controller?command=doneService&meetingId=${cell.value.id}&daysFromNow=${daysFromNow}"
+                                        <a href="/BeautySaloon_war/controller?command=activeDone&meetingId=${cell.value.id}&daysFromNow=${daysFromNow}"
                                            class="btn btn-primary" role="button">${cell.value.condition}</a>
                                     </c:when>
                                     <c:otherwise>
                                         <c:choose>
                                             <c:when test="${cell.value.condition eq 'DONE' and cell.key < currentTime}">
-                                                <a href="/BeautySaloon_war/controller?command=doneService&meetingId=${cell.value.id}&daysFromNow=${daysFromNow}"
+                                                <a href="/BeautySaloon_war/controller?command=activeDone&meetingId=${cell.value.id}&daysFromNow=${daysFromNow}"
                                                    class="btn btn-warning" role="button">${cell.value.condition}</a>
                                             </c:when>
                                             <c:otherwise>

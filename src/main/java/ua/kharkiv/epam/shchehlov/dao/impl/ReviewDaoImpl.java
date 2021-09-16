@@ -19,6 +19,7 @@ public class ReviewDaoImpl implements ReviewDao {
     private static final String DELETE_REVIEW_BY_ID = "DELETE FROM review WHERE id = ?";
     private static final String INSERT_NEW_REVIEW = "INSERT INTO review (text, rate) VALUES (?, ?)";
     private static final String UPDATE_REVIEW_BY_ID = "UPDATE review SET text = ?, rate = ? WHERE id = ?";
+    private static final String FIND_ALL_REVIEW_WITH_LIMIT = "SELECT * FROM review LIMIT ?, ?";
 
 
     @Override

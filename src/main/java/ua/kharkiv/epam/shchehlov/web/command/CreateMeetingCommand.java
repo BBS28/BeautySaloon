@@ -54,8 +54,6 @@ public class CreateMeetingCommand extends Command {
 
         log.debug(meetingService.insert(meeting));
 
-
-
-        return PAGE_TIME_SLOTS_LIST;
+        return String.format("controller?command=showTimeSlots&msId=%s", msId);
     }
 }

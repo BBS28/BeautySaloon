@@ -30,12 +30,12 @@
 
             <div class="col-sm-3 col-md-2">
 
-                <c:if test="${role == 'guest'}">
+                <c:if test="${role == 'guest' or role == null}">
                     <a href="/BeautySaloon_war/controller?command=logIn"
                        class="btn btn-success" role="button">Log In</a>
                 </c:if>
                 <p></p>
-                <c:if test="${role != 'guest'}">
+                <c:if test="${role == 'master' or role == 'admin' or role == 'client'}">
                     <a href="/BeautySaloon_war/controller?command=logOut"
                        class="btn btn-danger" role="button">Log Out</a>
                 </c:if>
@@ -53,6 +53,16 @@
                 </c:if>
                 <p></p>
 
+                <c:if test="${role == 'admin'}">
+                    <a href="/BeautySaloon_war/controller?command=adminCabinet"
+                       class="btn btn-success" role="button">Cabinet</a>
+                </c:if>
+                <p></p>
+
+                <a href="/BeautySaloon_war/controller?command=showReviews"
+                   class="btn btn-info" role="button">Reviews</a>
+                <p></p>
+
             </div>
 
             <div class="col-sm-9 col-md-8">
@@ -62,11 +72,21 @@
                     <thead>
 
                     <tr>
-                        <th>Master Name</th>
-                        <th>Master Surname</th>
+                        <th>
+                            Master
+                            <a href="/BeautySaloon_war/controller?command=showMasterServices&sort=master&sFilter=${sFilter}&mFilter=${mFilter}">
+                                <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                            </a>
+                        </th>
+                        <th>
+                            Master rate
+                            <a href="/BeautySaloon_war/controller?command=showMasterServices&sort=rate&sFilter=${sFilter}&mFilter=${mFilter}">
+                                <span class="glyphicon glyphicon-sort-by-order-alt"></span>
+                            </a>
+                        </th>
                         <th>Service</th>
                         <th>Service Price</th>
-                        <th>Master rate</th>
+
                         <c:if test="${role == 'client'}">
                             <th>See timetable</th>
                         </c:if>
@@ -78,22 +98,26 @@
                     <c:forEach items="${msList}" var="ms" varStatus="loop">
 
                         <tr>
-
-                            <td>${ms.master.name}</td>
-                            <td>${ms.master.surname}</td>
-                            <td>${ms.service.name}</td>
-                            <td>${ms.service.price}</td>
                             <td>
+                                  <a href="/BeautySaloon_war/controller?command=showMasterServices&mFilter=${ms.master.id}">
+                                          ${ms.master.name} ${ms.master.surname}
+                                  </a>
+                            <td>
+                                <span class="glyphicon glyphicon-star"></span>
                                 <fmt:formatNumber value="${ms.master.rate}" pattern="#.#"/>
                             </td>
-
+                            <td>
+                                <a href="/BeautySaloon_war/controller?command=showMasterServices&sFilter=${ms.service.id}">
+                                        ${ms.service.name}
+                                </a>
+                            </td>
+                            <td><fmt:formatNumber value="${ms.service.price}" pattern="#.00"/></td>
                             <c:if test="${role == 'client'}">
                                 <td>
                                     <a href="/BeautySaloon_war/controller?command=showTimeSlots&msId=${ms.id}"
                                        class="btn btn-primary" role="button">Choose</a>
                                 </td>
                             </c:if>
-
                         </tr>
 
                     </c:forEach>
@@ -102,6 +126,10 @@
 
                 </table>
 
+                <p>
+                    <a href="/BeautySaloon_war/controller?command=showMasterServices"
+                       class="btn btn-default" role="button">Clear Filters</a>
+                </p>
 
             </div>
 

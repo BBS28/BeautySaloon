@@ -11,7 +11,7 @@ public class Constant {
     public static final String SERVICE_PRICE = "price";
 
     public static final String REVIEW_TEXT = "text";
-    public static final String REVIEW_RATE = "int";
+    public static final String REVIEW_RATE = "rate";
 
     public static final String ACCOUNT_LOGIN = "login";
     public static final String ACCOUNT_PASSWORD = "password";

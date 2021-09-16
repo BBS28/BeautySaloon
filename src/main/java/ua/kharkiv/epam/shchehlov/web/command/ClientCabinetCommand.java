@@ -15,11 +15,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ClientCabinetCommand extends Command {
-    private static final long serialVersionUID = 8481491666371573283L;
+    private static final long serialVersionUID = 8481491616371573283L;
     private static final Logger log = Logger.getLogger(LoginCommand.class);
 
 
@@ -38,6 +41,8 @@ public class ClientCabinetCommand extends Command {
                 clientMeetingList.add(m);
             }
         }
+
+        clientMeetingList.sort((o1, o2) -> o2.getDateTime().compareTo(o1.getDateTime()));
 
         request.setAttribute("client", client);
         request.setAttribute("clientMeetings", clientMeetingList);

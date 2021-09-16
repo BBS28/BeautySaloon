@@ -17,46 +17,58 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">
+                <h3>REGISTER NEW ACCOUNT</h3>
 
-    <h2>REGISTER NEW ACCOUNT</h2>
+                <form method="post" action="/BeautySaloon_war/controller?command=registration">
+                    <div class="form-group">
+                        <label for="login">Login*:</label><br>
+                        <input type="text" name="login" id="login" class="form-control" placeholder="login">
+                    </div>
 
-    <form method="post" action="/BeautySaloon_war/controller?command=registration">
-        <div class="col-sm-3 my-1">
-            <label for="login">Login*:</label><br>
-            <input type="text" name="login" id="login" class="form-control" placeholder="login">
+                    <div class="form-group">
+                        <label for="password">Password*:</label><br>
+                        <input type="password" name="password" id="password" class="form-control"
+                               placeholder="password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="repeatPassword">Repeat Password*:</label><br>
+                        <input type="password" name="repeatPassword" id="repeatPassword" class="form-control"
+                               placeholder="repeat password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Name*:</label><br>
+                        <input type="text" name="name" id="name" class="form-control" placeholder="Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="surname">Surname*:</label><br>
+                        <input type="text" name="surname" id="surname" class="form-control" placeholder="Surname">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email*:</label><br>
+                        <input type="email" name="email" id="email" class="form-control" placeholder="user@mail.com">
+                    </div>
+
+                    <div class="text-danger">
+                        ${warn}
+                    </div>
+
+                    <input type="submit" class="btn btn-success" value="Submit"><br><br>
+                </form>
+
+                <p></p>
+                <a href="/BeautySaloon_war/controller?command=logIn"
+                   class="btn btn-outline-success" role="button">Log In</a>
+            </div>
+            <div class="col-sm"></div>
         </div>
-
-        <div class="col-sm-3 my-1">
-            <label for="password">Password*:</label><br>
-            <input type="password" name="password" id="password" class="form-control" placeholder="password">
-        </div>
-
-        <div class="col-sm-3 my-1">
-            <label for="repeatPassword">Repeat Password*:</label><br>
-            <input type="password" name="repeatPassword" id="repeatPassword" class="form-control" placeholder="repeat password">
-        </div>
-
-        <div class="col-sm-3 my-1">
-            <label for="name">Name*:</label><br>
-            <input type="text" name="name" id="name" class="form-control" placeholder="Name">
-        </div>
-
-        <div class="col-sm-3 my-1">
-            <label for="surname">Surname*:</label><br>
-            <input type="text" name="surname" id="surname" class="form-control" placeholder="Surname">
-        </div>
-
-        <div class="col-sm-3 my-1">
-            <label for="email">Email*:</label><br>
-            <input type="email" name="email" id="email" class="form-control" placeholder="user@mail.com">
-        </div>
-
-        <div class="text-danger">
-            ${warn}
-        </div>
-
-        <input type="submit" class="btn btn-outline-success" value="Submit"><br><br>
-    </form>
-
+    </div>
 </body>
 </html>

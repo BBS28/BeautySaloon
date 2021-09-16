@@ -20,7 +20,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class TimeSlotsCommand extends Command{
+public class TimeSlotsCommand extends Command {
     public static final String PAGE_TIME_SLOTS_LIST = "/WEB-INF/jsp/timeSlot.jsp";
     private static final long serialVersionUID = -8481491565171573283L;
     private static final Logger log = Logger.getLogger(TimeSlotsCommand.class);
@@ -36,7 +36,7 @@ public class TimeSlotsCommand extends Command{
         log.debug("master = " + master);
         List<Catalog> catalogList = catalogService.getAll();
         List<Catalog> allCatalogs = new ArrayList<>();
-        for (Catalog c : catalogList){
+        for (Catalog c : catalogList) {
             if (c.getMaster().getId().equals(master.getId())) {
                 allCatalogs.add(c);
 //                log.debug("added masterService" + ms.getId() + " " + ms.getMaster().getSurname() + " to allMasterServices");
@@ -82,13 +82,13 @@ public class TimeSlotsCommand extends Command{
         for (LocalDateTime t : emptySchedule) {
             schedule.put(t, false);
         }
-        for(LocalDateTime m : masterRegistrations) {
+        for (LocalDateTime m : masterRegistrations) {
             schedule.replace(m, true);
         }
 
-        for (Map.Entry<LocalDateTime, Boolean> entry : schedule.entrySet()){
-            log.debug(entry.getKey() + " " + entry.getValue());
-        }
+//        for (Map.Entry<LocalDateTime, Boolean> entry : schedule.entrySet()) {
+//            log.debug(entry.getKey() + " " + entry.getValue());
+//        }
 
         request.setAttribute("masterRegistrations", masterRegistrations);
         request.setAttribute("schedule", schedule);
@@ -97,7 +97,7 @@ public class TimeSlotsCommand extends Command{
         return PAGE_TIME_SLOTS_LIST;
     }
 
-    private List<LocalDateTime> createEmptyFutureSchedule (int days) {
+    static List<LocalDateTime> createEmptyFutureSchedule(int days) {
         List<LocalDateTime> emptySchedule = new ArrayList<>();
         LocalDateTime dateTime = LocalDateTime.now();
         dateTime = dateTime.minusMinutes(dateTime.getMinute());

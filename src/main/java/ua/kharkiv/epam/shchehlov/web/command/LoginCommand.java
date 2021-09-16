@@ -21,13 +21,14 @@ public class LoginCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
         session.setAttribute("role", "guest");
-        AccountService accountService = new AccountServiceImpl(new AccountDaoImpl());
         log.debug(request.getMethod());
+
         if ("POST".equalsIgnoreCase(request.getMethod())) {
             try {
                 String login = request.getParameter("login");
                 String password = request.getParameter("password");
                 log.debug(String.format("login - %s, password - %s", login, password));
+                AccountService accountService = new AccountServiceImpl(new AccountDaoImpl());
                 Account account = accountService.login(login, password);
                 log.debug(String.format("%s %s signed in", account.getClass().getSimpleName(), account.getLogin()));
                 String role = account.getRole().toString().toLowerCase();

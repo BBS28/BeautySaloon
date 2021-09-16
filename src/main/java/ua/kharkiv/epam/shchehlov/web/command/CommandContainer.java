@@ -14,13 +14,19 @@ public class CommandContainer {
         commands.put("showServices", new ShowServicesCommand());
         commands.put("showMasterServices", new ShowMasterServiceCommand());
         commands.put("showTimeSlots", new TimeSlotsCommand());
+        commands.put("showReviews", new ShowReviewsCommand());
         commands.put("createMeeting", new CreateMeetingCommand());
         commands.put("logIn", new LoginCommand());
         commands.put("logOut", new LogoutCommand());
         commands.put("registration", new RegistrationCommand());
         commands.put("masterSchedule", new MasterScheduleCommand());
-        commands.put("doneService", new DoneServiceCommand());
+        commands.put("activeDone", new DoneServiceCommand());
+        commands.put("paidDone", new PaidServiceCommand());
         commands.put("clientCabinet", new ClientCabinetCommand());
+        commands.put("adminCabinet", new AdminCabinetCommand());
+        commands.put("changeTimeSlot", new ChangeTimeSlotCommand());
+        commands.put("cancelMeeting", new CancelMeetingCommand());
+        commands.put("leaveReview", new LeaveReviewCommand());
     }
 
     public static Command get(String commandName) {

@@ -18,15 +18,6 @@ public class AccountDaoImpl implements AccountDao {
     private static final String FIND_ALL_ACCOUNTS = "SELECT * FROM account";
     private static final String FIND_ACCOUNT_BY_ID = "SELECT * FROM account WHERE id = ?";
     private static final String FIND_ACCOUNT_BY_LOGIN = "SELECT * FROM account WHERE login = ?";
-    private static final String DELETE_CLIENT_BY_ID = "DELETE FROM account WHERE id = ?";
-    private static final String INSERT_NEW_CLIENT =
-            "INSERT INTO account " +
-                    "(login, password, role, name, surname, email) " +
-                    "VALUES (?, ?, 'CLIENT', ?, ?, ?)";
-    private static final String UPDATE_MASTER_BY_ID =
-            "UPDATE account " +
-                    "SET login = ?, password = ?, name = ?, surname = ?, email = ? " +
-                    "WHERE id = ? AND role= 'CLIENT'";
 
     @Override
     public List<Account> getAll() {

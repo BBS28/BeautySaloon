@@ -18,42 +18,49 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
-<h2>
-    Master: ${ms.master.surname} ${ms.master.name}
-</h2>
-<h2>
-Service: ${ms.service.name}
-</h2>
+
 <body>
+
+
     <div class="container">
-        <div>
-            <table class="table">
-                <tr>
-                    <%--                    <th>ID</th>--%>
-                    <th>Week Day</th>
-                    <th>Date</th>
-                    <th>Time Slot</th>
-                    <th>Register</th>
-                </tr>
-                <c:forEach items="${schedule}" var="cell" varStatus="loop">
+        <div class="row">
+            <div class="col-sm-3 col-md-2">
+                <h3>Master: ${ms.master.surname} ${ms.master.name}</h3>
+                <h3>Service: ${ms.service.name}</h3>
+                <p></p>
+                <a href="/BeautySaloon_war/controller?command=showMasterServices" role="button"
+                   class="btn btn-success">Services</a>
+            </div>
+
+            <div class="col-sm-9 col-md-8">
+            <h3>Schedule</h3>
+                <table class="table">
                     <tr>
-                        <td>${cell.key.dayOfWeek}</td>
-                        <td>${cell.key.month}, ${cell.key.dayOfMonth}</td>
-                        <td>${cell.key.hour} : 00</td>
-                        <c:if test="${cell.value == false}">
-                            <td>
-                                <a href="/BeautySaloon_war/controller?command=createMeeting&clientId=1&msId=${ms.id}&time=${cell.key}"
-                                   class="btn btn-primary" role="button">
-                                    CHOOSE THIS
-                                </a>
-                            </td>
-                        </c:if>
-                        <c:if test="${cell.value == true}">
-                            <td>TAKEN</td>
-                        </c:if>
+                        <th>Week Day</th>
+                        <th>Date</th>
+                        <th>Time Slot</th>
+                        <th>Register</th>
+                    </tr>
+                    <c:forEach items="${schedule}" var="cell" varStatus="loop">
+                        <tr>
+                            <td>${cell.key.dayOfWeek}</td>
+                            <td>${cell.key.month}, ${cell.key.dayOfMonth}</td>
+                            <td>${cell.key.hour} : 00</td>
+                            <c:if test="${cell.value == false}">
+                                <td>
+                                    <a href="/BeautySaloon_war/controller?command=createMeeting&clientId=${sessionScope.accountID}&msId=${ms.id}&time=${cell.key}"
+                                       class="btn btn-primary" role="button">
+                                        CHOOSE THIS
+                                    </a>
+                                </td>
+                            </c:if>
+                            <c:if test="${cell.value == true}">
+                                <td>TAKEN</td>
+                            </c:if>
                         </tr>
-                </c:forEach>
-            </table>
+                    </c:forEach>
+                </table>
+            </div>
         </div>
     </div>
 </body>

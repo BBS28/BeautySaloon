@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col-sm"></div>
             <div class="col-sm">
-                <h2>BEAUTY SALOON</h2>
+                <h1>BEAUTY SALOON</h1>
                 <form method="post" action="/BeautySaloon_war/controller?command=logIn">
                     <div class="form-group">
                         <label for="login">Login:</label><br>
@@ -33,7 +33,7 @@
                         <input type="password" name="password" id="password" class="form-control"
                                placeholder="password">
                     </div>
-                    <input type="submit" class="btn btn-outline-success" value="    Submit    ">
+                    <input type="submit" class="btn btn-success" value="    Submit    ">
                     <a class="text-danger">
                         ${warn}
                     </a><br><br>
