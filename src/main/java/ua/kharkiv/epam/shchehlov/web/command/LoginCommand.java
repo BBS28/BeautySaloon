@@ -44,6 +44,5 @@ public class LoginCommand extends Command {
         } else {
             return "/WEB-INF/jsp/login.jsp";
         }
-
     }
 }

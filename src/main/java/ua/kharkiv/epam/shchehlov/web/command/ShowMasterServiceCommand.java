@@ -55,6 +55,7 @@ public class ShowMasterServiceCommand extends Command {
             }
         }
 
+
         request.setAttribute("msList", msList);
         return PAGE_MASTER_SERVICE_LIST;
     }

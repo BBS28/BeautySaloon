@@ -10,7 +10,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -41,7 +43,7 @@ public class ChangeTimeSlotCommand extends Command {
                     newMeeting.getDateTime()));
 
             if (meetingService.insert(newMeeting) != null) {
-               meetingService.deleteById(previousMeetingId);
+                meetingService.deleteById(previousMeetingId);
             }
 
             //Todo: throw new exception
@@ -58,7 +60,7 @@ public class ChangeTimeSlotCommand extends Command {
             long masterId = master.getId();
 
             meetingList.removeIf(nextMeeting -> nextMeeting.getCatalog().getMaster().getId() != masterId);
-            List<LocalDateTime> emptySchedule = TimeSlotsCommand.createEmptyFutureSchedule(14);
+            List<LocalDateTime> emptySchedule = createEmptyFutureSchedule(14);
             Iterator<LocalDateTime> timeIterator = emptySchedule.iterator();
 
             while (timeIterator.hasNext()) {
@@ -77,5 +79,21 @@ public class ChangeTimeSlotCommand extends Command {
             return "/WEB-INF/jsp/changeTS.jsp";
         }
 
+    }
+
+    static List<LocalDateTime> createEmptyFutureSchedule(int days) {
+        List<LocalDateTime> emptySchedule = new ArrayList<>();
+        LocalDateTime dateTime = LocalDateTime.now();
+        dateTime = dateTime.minusMinutes(dateTime.getMinute());
+        dateTime = dateTime.minusSeconds(dateTime.getSecond());
+        dateTime = dateTime.minusNanos(dateTime.getNano());
+        int delta = 18 - dateTime.getHour();
+        for (int i = 1; i < 24 * days + delta; i++) {
+            LocalDateTime timeCell = dateTime.plusHours(i);
+            if (timeCell.getHour() < 18 && timeCell.getHour() > 8 && !timeCell.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+                emptySchedule.add(timeCell);
+            }
+        }
+        return emptySchedule;
     }
 }

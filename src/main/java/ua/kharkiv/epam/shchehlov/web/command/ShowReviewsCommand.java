@@ -38,9 +38,7 @@ public class ShowReviewsCommand extends Command {
             log.debug(reviewService.getById(reviewId).getText());
         }
 
-
         request.setAttribute("reviewMap", reviewMap);
         return "/WEB-INF/jsp/showReviews.jsp";
-
     }
 }

@@ -1,78 +1,55 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: bbsch
-  Date: 13.09.2021
-  Time: 14:52
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Administrator Cabinet</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-</head>
+<%@ taglib prefix="dt" uri="/WEB-INF/tld/dateTime.tld" %>
+<%@ include file="/WEB-INF/jspf/head.jspf"%>
 <body>
+    <%@ include file="/WEB-INF/jspf/navbar.jspf" %>
 
     <div class="container">
-        <h2>Administrator's Cabinet</h2>
+        <h2><fmt:message key="adminCabinet"/></h2>
         <div class="row">
 
             <div class="col-sm-3 col-md-2">
-                <p>Login: ${admin.login}</p>
-                <p>Name: ${admin.name}</p>
-                <p>Surname: ${admin.surname}</p>
-                <p>Email: ${admin.email}</p>
-                <a href="/BeautySaloon_war/controller?command=logOut"
-                   class="btn btn-danger" role="button">Log Out</a>
-                <p></p>
-                <a href="/BeautySaloon_war/controller?command=showMasterServices" role="button"
-                   class="btn btn-success">Services</a>
-                <p></p>
+                <p><b><fmt:message key="login"/>:</b> ${admin.login}</p>
+                <p><b><fmt:message key="name"/>:</b> ${admin.name}</p>
+                <p><b><fmt:message key="surname"/>:</b> ${admin.surname}</p>
+                <p><b>Email:</b> ${admin.email}</p>
             </div>
 
             <div class="col-sm-9 col-md-8">
-                <h3>All Services</h3>
+                <h3><fmt:message key="allServices"/></h3>
                 <table class="table">
                     <tr>
-                        <th>Date
+                        <th><fmt:message key="date"/>
                         <a href="/BeautySaloon_war/controller?command=adminCabinet&sort=dateSort">
                             <span class="glyphicon glyphicon-sort-by-order"></span>
                         </a>
                         </th>
                         <th></th>
-                        <th>Master
+                        <th><fmt:message key="master"/>
                             <a href="/BeautySaloon_war/controller?command=adminCabinet&sort=masterSort">
                                 <span class="glyphicon glyphicon-sort-by-alphabet"></span>
                             </a>
                         </th>
-                        <th>Service
+                        <th><fmt:message key="service"/>
                             <a href="/BeautySaloon_war/controller?command=adminCabinet&sort=serviceSort">
                                 <span class="glyphicon glyphicon-sort-by-alphabet"></span>
                             </a>
                         </th>
-                        <th>Client
+                        <th><fmt:message key="client"/>
                             <a href="/BeautySaloon_war/controller?command=adminCabinet&sort=clientSort">
                                 <span class="glyphicon glyphicon-sort-by-alphabet"></span>
                             </a>
                         </th>
-                        <th>Status</th>
+                        <th><fmt:message key="status"/></th>
                         <th></th>
 
-
-                        <%--                        <th>Review</th>--%>
                     </tr>
                     <c:forEach items="${meetingList}" var="cell" varStatus="loop">
                         <tr>
-                            <td>${cell.dateTime}</td>
+                            <td><dt:formatDT>${cell.dateTime}</dt:formatDT></td>
                             <td>
                                 <c:if test="${cell.dateTime > currentTime}">
                                 <a href="/BeautySaloon_war/controller?command=changeTimeSlot&slotId=${cell.id}"
-                                   class="btn btn-info" role="button">Change</a>
+                                   class="btn btn-info" role="button"><fmt:message key="change"/></a>
                                 </c:if>
                             </td>
                             <td>${cell.catalog.master.name} ${cell.catalog.master.surname}</td>
@@ -102,7 +79,7 @@
                             <td>
                                 <c:if test="${cell.condition eq 'ACTIVE'}">
                                     <a href="/BeautySaloon_war/controller?command=cancelMeeting&meetingId=${cell.id}&pageDate=${cell.dateTime}"
-                                       class="btn btn-danger" role="button">Cancel</a>
+                                       class="btn btn-danger" role="button"><fmt:message key="cancel"/></a>
                                 </c:if>
                             </td>
 

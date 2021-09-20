@@ -1,0 +1,62 @@
+<nav class="navbar navbar-dark" style="background-color: #E6E6E6;">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/BeautySaloon_war/controller?command=showMasterServices">
+                EPAM Beauty Saloon</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="/BeautySaloon_war/controller?command=showMasterServices"><fmt:message key="home"/></a></li>
+            <li><a href="/BeautySaloon_war/controller?command=showReviews"><fmt:message key="reviews"/></a></li>
+            <li><a href="/BeautySaloon_war/controller?command=showContacts"><fmt:message key="contacts"/></a></li>
+
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+
+            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span
+                    class="glyphicon glyphicon-globe"></span><fmt:message key="language"/> ${sessionScope.language}<span
+                    class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <form method="post" action="/BeautySaloon_war/controller?command=changeLanguage">
+                            <input type="hidden" name="language" value="en">
+
+                            <input type="submit" class="dropdown-toggle" value="English">
+                        </form>
+                    </li>
+                    <li>
+                        <form method="post" action="/BeautySaloon_war/controller?command=changeLanguage">
+                            <input type="hidden" name="language" value="ru">
+                            <input type="submit" class="dropdown-toggle" value="Russian">
+                        </form>
+                    </li>
+                </ul>
+            </li>
+
+            <c:if test="${role == 'client'}">
+                <li><a href="/BeautySaloon_war/controller?command=clientCabinet"><span
+                        class="glyphicon glyphicon-user"></span> <fmt:message key="cabinet"/></a></li>
+            </c:if>
+            <c:if test="${role == 'master'}">
+                <li><a href="/BeautySaloon_war/controller?command=masterSchedule"><span
+                        class="glyphicon glyphicon-user"></span> <fmt:message key="cabinet"/></a></li>
+            </c:if>
+            <c:if test="${role == 'admin'}">
+                <li><a href="/BeautySaloon_war/controller?command=adminCabinet"><span
+                        class="glyphicon glyphicon-user"></span> <fmt:message key="cabinet"/></a></li>
+            </c:if>
+
+            <c:if test="${role == 'guest' or role == null}">
+                <li><a href="/BeautySaloon_war/controller?command=registration"><span
+                        class="glyphicon glyphicon-user"></span> <fmt:message key="signUp"/></a></li>
+
+                <li><a href="/BeautySaloon_war/controller?command=logIn"><span
+                        class="glyphicon glyphicon-log-in"></span> <fmt:message key="login"/></a></li>
+            </c:if>
+            <c:if test="${role == 'master' or role == 'admin' or role == 'client'}">
+                <li><a href="/BeautySaloon_war/controller?command=logOut"><span
+                        class="glyphicon glyphicon-log-out"></span> <fmt:message key="logout"/></a></li>
+            </c:if>
+
+        </ul>
+    </div>
+</nav>

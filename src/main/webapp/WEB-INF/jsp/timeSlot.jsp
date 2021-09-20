@@ -1,45 +1,24 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: bbsch
-  Date: 06.09.2021
-  Time: 22:23
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Service List</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-</head>
-
-
+<%@ include file="/WEB-INF/jspf/head.jspf"%>
 <body>
-
+    <%@ include file="/WEB-INF/jspf/navbar.jspf" %>
 
     <div class="container">
         <div class="row">
             <div class="col-sm-3 col-md-2">
-                <h3>Master: ${ms.master.surname} ${ms.master.name}</h3>
-                <h3>Service: ${ms.service.name}</h3>
+                <p><b><fmt:message key="master"/>:</b> ${ms.master.surname} ${ms.master.name}</p>
+                <p><b><fmt:message key="service"/>:</b> ${ms.service.name}</p>
                 <p></p>
-                <a href="/BeautySaloon_war/controller?command=showMasterServices" role="button"
-                   class="btn btn-success">Services</a>
+
             </div>
 
             <div class="col-sm-9 col-md-8">
-            <h3>Schedule</h3>
+                <h2><fmt:message key="schedule"/></h2>
                 <table class="table">
                     <tr>
-                        <th>Week Day</th>
-                        <th>Date</th>
-                        <th>Time Slot</th>
-                        <th>Register</th>
+                        <th><fmt:message key="weekDay"/></th>
+                        <th><fmt:message key="date"/></th>
+                        <th><fmt:message key="time"/></th>
+                        <th><fmt:message key="register"/></th>
                     </tr>
                     <c:forEach items="${schedule}" var="cell" varStatus="loop">
                         <tr>
@@ -48,18 +27,31 @@
                             <td>${cell.key.hour} : 00</td>
                             <c:if test="${cell.value == false}">
                                 <td>
-                                    <a href="/BeautySaloon_war/controller?command=createMeeting&clientId=${sessionScope.accountID}&msId=${ms.id}&time=${cell.key}"
-                                       class="btn btn-primary" role="button">
-                                        CHOOSE THIS
-                                    </a>
+                                    <form method="post" action="/BeautySaloon_war/controller?command=createMeeting">
+                                        <input type="hidden" name="clientId" value="${sessionScope.accountID}">
+                                        <input type="hidden" name="msId" value="${ms.id}">
+                                        <input type="hidden" name="time" value="${cell.key}">
+                                        <input type="submit" class="btn btn-primary" value="<fmt:message key="chooseThisTime"/>">
+                                    </form>
                                 </td>
                             </c:if>
                             <c:if test="${cell.value == true}">
-                                <td>TAKEN</td>
+                                <td><fmt:message key="taken"/></td>
                             </c:if>
                         </tr>
                     </c:forEach>
                 </table>
+
+                <c:if test="${daysFromNow > 0}">
+                    <a href="/BeautySaloon_war/controller?command=showTimeSlots&msId=${ms.id}&scheduleDay=${dayOfWeek eq 'MONDAY' ? daysFromNow - 2 : daysFromNow - 1}"
+                       class="btn btn-info" role="button"><fmt:message key="previousDay"/></a>
+                </c:if>
+
+                <c:if test="${daysFromNow < 14}">
+                    <a href="/BeautySaloon_war/controller?command=showTimeSlots&msId=${ms.id}&scheduleDay=${dayOfWeek eq 'SATURDAY' ? daysFromNow + 2 : daysFromNow + 1}"
+                       class="btn btn-info" role="button"><fmt:message key="nextDay"/></a>
+                </c:if>
+
             </div>
         </div>
     </div>
