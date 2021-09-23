@@ -2,7 +2,7 @@ package ua.kharkiv.epam.shchehlov.dao.impl;
 
 import org.apache.log4j.Logger;
 import ua.kharkiv.epam.shchehlov.dao.MeetingDao;
-import ua.kharkiv.epam.shchehlov.dao.db.Constant;
+import ua.kharkiv.epam.shchehlov.constant.Constant;
 import ua.kharkiv.epam.shchehlov.dao.db.DBManager;
 import ua.kharkiv.epam.shchehlov.entity.*;
 
@@ -47,7 +47,7 @@ public class MeetingDaoImpl implements MeetingDao {
             }
             con.commit();
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, st, rs);
         }
@@ -70,7 +70,7 @@ public class MeetingDaoImpl implements MeetingDao {
             }
             con.commit();
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, ps, rs);
         }
@@ -95,7 +95,7 @@ public class MeetingDaoImpl implements MeetingDao {
             try {
                 con.rollback();
             } catch (SQLException ex) {
-                log.error("cannot obtain categories", ex);
+                log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
             }
         } finally {
             dbManager.close(con, ps);
@@ -118,7 +118,7 @@ public class MeetingDaoImpl implements MeetingDao {
                     .plusHours(3)
                     .atZone(ZoneId.of("UTC"))
                     .format(DateTimeFormatter
-                            .ofPattern("uuuu-MM-dd HH:mm:ss"))));
+                            .ofPattern(Constant.DATE_TIME_PATTERN))));
             if (ps.executeUpdate() > 0) {
                 rs = ps.getGeneratedKeys();
                 if (rs.next()) {
@@ -128,7 +128,7 @@ public class MeetingDaoImpl implements MeetingDao {
             }
             con.commit();
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, ps, rs);
         }
@@ -158,7 +158,7 @@ public class MeetingDaoImpl implements MeetingDao {
                     .plusHours(3)
                     .atZone(ZoneId.of("UTC"))
                     .format(DateTimeFormatter
-                            .ofPattern("uuuu-MM-dd HH:mm:ss"))));
+                            .ofPattern(Constant.DATE_TIME_PATTERN))));
             ps.setLong(6, meeting.getId());
             ps.executeUpdate();
             if (ps.executeUpdate() > 0) {
@@ -171,7 +171,7 @@ public class MeetingDaoImpl implements MeetingDao {
                 log.debug("rollback");
                 con.rollback();
             } catch (SQLException ex) {
-                log.error("cannot obtain categories", ex);
+                log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
             }
         } finally {
             dbManager.close(con, ps);

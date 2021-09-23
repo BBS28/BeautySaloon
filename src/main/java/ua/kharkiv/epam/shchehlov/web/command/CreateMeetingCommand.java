@@ -26,9 +26,16 @@ public class CreateMeetingCommand extends Command {
     private static final long serialVersionUID = 8481491565171543283L;
     private static final Logger log = Logger.getLogger(CreateMeetingCommand.class);
 
-
+    /**
+     * Execution method for CreateMeetingCommand command.
+     *
+     * @param request
+     * @param response
+     * @return Address to go once the command is executed.
+     */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        log.debug("Command CreateMeetingCommand start");
         MeetingService meetingService = new MeetingServiceImpl(new MeetingDaoImpl());
         ClientService clientService = new ClientServiceImpl(new ClientDaoImpl());
         CatalogService msService = new CatalogServiceImpl(new CatalogDaoImpl());
@@ -53,7 +60,7 @@ public class CreateMeetingCommand extends Command {
         );
 
         log.debug(meetingService.insert(meeting));
-
+        log.debug("Command CreateMeetingCommand finished");
         return String.format("controller?command=showTimeSlots&msId=%s", msId);
     }
 }

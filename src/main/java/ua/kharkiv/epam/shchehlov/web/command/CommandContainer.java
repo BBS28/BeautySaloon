@@ -28,7 +28,6 @@ public class CommandContainer {
         commands.put("changeTimeSlot", new ChangeTimeSlotCommand());//
         commands.put("cancelMeeting", new CancelMeetingCommand());//
         commands.put("leaveReview", new LeaveReviewCommand());//
-        commands.put("sendEmail", new SendEmailCommand());
         commands.put("changeLanguage", new ChangeLanguageCommand());
     }
 

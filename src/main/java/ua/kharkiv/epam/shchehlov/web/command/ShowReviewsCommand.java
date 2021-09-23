@@ -1,6 +1,7 @@
 package ua.kharkiv.epam.shchehlov.web.command;
 
 import org.apache.log4j.Logger;
+import ua.kharkiv.epam.shchehlov.constant.Path;
 import ua.kharkiv.epam.shchehlov.dao.impl.MeetingDaoImpl;
 import ua.kharkiv.epam.shchehlov.dao.impl.ReviewDaoImpl;
 import ua.kharkiv.epam.shchehlov.entity.Meeting;
@@ -20,15 +21,20 @@ public class ShowReviewsCommand extends Command {
     private static final Logger log = Logger.getLogger(ShowMasterServiceCommand.class);
     private static final long serialVersionUID = -8481215465177573283L;
 
+    /**
+     * Execution method for ShowReviewsCommand command.
+     *
+     * @param request
+     * @param response
+     * @return Address to go once the command is executed.
+     */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
-
+        log.debug("Command ShowReviewsCommand start");
         MeetingService meetingService = new MeetingServiceImpl(new MeetingDaoImpl());
         List<Meeting> meetingList = meetingService.getAll();
         meetingList.removeIf(meeting -> meeting.getReviewId() == 0);
         meetingList.sort(((o1, o2) -> Long.compare(o2.getReviewId(), o1.getReviewId())));
-
         long reviewId;
         ReviewService reviewService = new ReviewServiceImpl(new ReviewDaoImpl());
         Map<Meeting, Review> reviewMap = new LinkedHashMap<>();
@@ -39,6 +45,7 @@ public class ShowReviewsCommand extends Command {
         }
 
         request.setAttribute("reviewMap", reviewMap);
-        return "/WEB-INF/jsp/showReviews.jsp";
+        log.debug("Command ShowReviewsCommand finished");
+        return Path.SHOW_REVIEW_PATH;
     }
 }

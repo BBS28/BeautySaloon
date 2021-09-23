@@ -2,7 +2,7 @@ package ua.kharkiv.epam.shchehlov.dao.impl;
 
 import org.apache.log4j.Logger;
 import ua.kharkiv.epam.shchehlov.dao.MasterDao;
-import ua.kharkiv.epam.shchehlov.dao.db.Constant;
+import ua.kharkiv.epam.shchehlov.constant.Constant;
 import ua.kharkiv.epam.shchehlov.dao.db.DBManager;
 import ua.kharkiv.epam.shchehlov.entity.Master;
 
@@ -80,7 +80,7 @@ public class MasterDaoImpl implements MasterDao {
             }
             con.commit();
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, st, rs);
         }
@@ -103,7 +103,7 @@ public class MasterDaoImpl implements MasterDao {
             }
             con.commit();
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, ps, rs);
         }
@@ -128,7 +128,7 @@ public class MasterDaoImpl implements MasterDao {
             try {
                 con.rollback();
             } catch (SQLException ex) {
-                log.error("cannot obtain categories", ex);
+                log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
             }
         } finally {
             dbManager.close(con, ps);
@@ -158,7 +158,7 @@ public class MasterDaoImpl implements MasterDao {
             }
             con.commit();
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, ps, rs);
         }

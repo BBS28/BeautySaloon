@@ -12,13 +12,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
 public class PaidServiceCommand extends Command {
     private static final long serialVersionUID = 8481341669171573292L;
     private static final Logger log = Logger.getLogger(DoneServiceCommand.class);
 
+    /**
+     * Execution method for MasterScheduleCommand command.
+     *
+     * @param request
+     * @param response
+     * @return Address to go once the command is executed.
+     */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        log.debug("Command PaidServiceCommand start");
         long meetingId = Long.parseLong(request.getParameter("meetingId"));
         MeetingService meetingService = new MeetingServiceImpl(new MeetingDaoImpl());
         Meeting meeting = meetingService.getById(meetingId);
@@ -28,7 +35,11 @@ public class PaidServiceCommand extends Command {
             meeting.setCondition(Condition.PAID);
         }
         boolean result = meetingService.update(meeting);
+        if("POST".equalsIgnoreCase(request.getMethod())){
+            request.setAttribute("requestTypePost", "post");
+        }
         log.debug(result);
-        return "controller?command=adminCabinet";
+        log.debug("Command PaidServiceCommand finished");
+        return "/controller?command=adminCabinet";
     }
 }

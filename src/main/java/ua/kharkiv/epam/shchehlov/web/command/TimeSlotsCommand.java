@@ -1,11 +1,12 @@
 package ua.kharkiv.epam.shchehlov.web.command;
 
 import org.apache.log4j.Logger;
+import ua.kharkiv.epam.shchehlov.constant.Path;
 import ua.kharkiv.epam.shchehlov.dao.impl.CatalogDaoImpl;
 import ua.kharkiv.epam.shchehlov.dao.impl.MeetingDaoImpl;
+import ua.kharkiv.epam.shchehlov.entity.Catalog;
 import ua.kharkiv.epam.shchehlov.entity.Condition;
 import ua.kharkiv.epam.shchehlov.entity.Master;
-import ua.kharkiv.epam.shchehlov.entity.Catalog;
 import ua.kharkiv.epam.shchehlov.entity.Meeting;
 import ua.kharkiv.epam.shchehlov.services.CatalogService;
 import ua.kharkiv.epam.shchehlov.services.MeetingService;
@@ -19,13 +20,22 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TimeSlotsCommand extends Command {
-    private static final String PAGE_TIME_SLOTS_LIST = "/WEB-INF/jsp/timeSlot.jsp";
     private static final long serialVersionUID = -8481491565171573283L;
     private static final Logger log = Logger.getLogger(TimeSlotsCommand.class);
 
+    /**
+     * Execution method for TimeSlotsCommand command.
+     *
+     * @param request
+     * @param response
+     * @return Address to go once the command is executed.
+     */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         CatalogService catalogService = new CatalogServiceImpl(new CatalogDaoImpl());
@@ -40,7 +50,6 @@ public class TimeSlotsCommand extends Command {
         for (Catalog c : catalogList) {
             if (c.getMaster().getId().equals(master.getId())) {
                 allCatalogs.add(c);
-//                log.debug("added masterService" + ms.getId() + " " + ms.getMaster().getSurname() + " to allMasterServices");
             }
         }
 
@@ -95,7 +104,7 @@ public class TimeSlotsCommand extends Command {
 
         //Creating empty slots for current daysFromNow
         List<LocalDateTime> emptySchedule = createEmptyDaySchedule(daysFromNow);
-        if (emptySchedule.isEmpty()){
+        if (emptySchedule.isEmpty()) {
             emptySchedule = createEmptyDaySchedule(++daysFromNow);
         }
 
@@ -122,25 +131,15 @@ public class TimeSlotsCommand extends Command {
         request.setAttribute("daysFromNow", daysFromNow);
         request.setAttribute("dayOfWeek", dayOfWeek);
         request.setAttribute("currentTime", LocalDateTime.now());
-        return PAGE_TIME_SLOTS_LIST;
+        return Path.TIME_SLOTS_LIST_PATH;
     }
 
-//    static List<LocalDateTime> createEmptyFutureSchedule(int days) {
-//        List<LocalDateTime> emptySchedule = new ArrayList<>();
-//        LocalDateTime dateTime = LocalDateTime.now();
-//        dateTime = dateTime.minusMinutes(dateTime.getMinute());
-//        dateTime = dateTime.minusSeconds(dateTime.getSecond());
-//        dateTime = dateTime.minusNanos(dateTime.getNano());
-//        int delta = 18 - dateTime.getHour();
-//        for (int i = 1; i < 24 * days + delta; i++) {
-//            LocalDateTime timeCell = dateTime.plusHours(i);
-//            if (timeCell.getHour() < 18 && timeCell.getHour() > 8 && !timeCell.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-//                emptySchedule.add(timeCell);
-//            }
-//        }
-//        return emptySchedule;
-//    }
-
+    /**
+     * create empty time slots schedule from moment of now
+     * for a certain number of days except Sunday
+     *
+     * @param daysFromNow
+     */
     private static List<LocalDateTime> createEmptyDaySchedule(int daysFromNow) {
         List<LocalDateTime> emptySchedule = new ArrayList<>();
         LocalDateTime dateTime = LocalDateTime.now();
@@ -161,6 +160,4 @@ public class TimeSlotsCommand extends Command {
         }
         return emptySchedule;
     }
-
-
 }

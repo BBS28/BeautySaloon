@@ -25,6 +25,7 @@
                             <td>${cell.value.text}</td>
                         </tr>
                     </c:forEach>
+
                 </table>
 
             </div>

@@ -56,7 +56,7 @@
                             </td>
                             <td>
                                 <a href="/BeautySaloon_war/controller?command=showMasterServices&sFilter=${ms.service.id}">
-                                        ${ms.service.name}
+                                    <fmt:message key="${ms.service.name}"/>
                                 </a>
                             </td>
                             <td><fmt:formatNumber value="${ms.service.price}" pattern="#.00"/></td>

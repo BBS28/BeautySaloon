@@ -26,8 +26,8 @@
                 </tr>
                 <c:forEach items="${masterDaySchedule}" var="cell" varStatus="loop">
                     <tr>
-                        <td>${cell.key.dayOfWeek}</td>
-                        <td>${cell.key.month}, ${cell.key.dayOfMonth}</td>
+                        <td><fmt:message key="${cell.key.dayOfWeek}"/></td>
+                        <td><fmt:message key="${cell.key.month}"/>, ${cell.key.dayOfMonth}</td>
                         <td>${cell.key.hour} : 00</td>
                         <c:if test="${cell.value == null}">
                             <td></td>
@@ -36,20 +36,20 @@
                             <td></td>
                         </c:if>
                         <c:if test="${cell.value != null}">
-                            <td>${cell.value.catalog.service.name}</td>
+                            <td><fmt:message key="${cell.value.catalog.service.name}"/></td>
                             <td><fmt:message key="taken"/></td>
                             <td>${cell.value.client.name} ${cell.value.client.surname}</td>
                             <td>
                                 <c:choose>
                                     <c:when test="${cell.value.condition eq 'ACTIVE' and cell.key < currentTime}">
                                         <a href="/BeautySaloon_war/controller?command=activeDone&meetingId=${cell.value.id}&daysFromNow=${daysFromNow}"
-                                           class="btn btn-primary" role="button">${cell.value.condition}</a>
+                                           class="btn btn-primary" role="button"><fmt:message key="${cell.value.condition}"/></a>
                                     </c:when>
                                     <c:otherwise>
                                         <c:choose>
                                             <c:when test="${cell.value.condition eq 'DONE' and cell.key < currentTime}">
                                                 <a href="/BeautySaloon_war/controller?command=activeDone&meetingId=${cell.value.id}&daysFromNow=${daysFromNow}"
-                                                   class="btn btn-warning" role="button">${cell.value.condition}</a>
+                                                   class="btn btn-warning" role="button"><fmt:message key="${cell.value.condition}"/></a>
                                             </c:when>
                                             <c:otherwise>
                                                 ${cell.value.condition}

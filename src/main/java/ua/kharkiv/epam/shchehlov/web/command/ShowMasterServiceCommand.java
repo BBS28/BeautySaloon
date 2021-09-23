@@ -1,6 +1,7 @@
 package ua.kharkiv.epam.shchehlov.web.command;
 
 import org.apache.log4j.Logger;
+import ua.kharkiv.epam.shchehlov.constant.Path;
 import ua.kharkiv.epam.shchehlov.dao.impl.CatalogDaoImpl;
 import ua.kharkiv.epam.shchehlov.entity.Catalog;
 import ua.kharkiv.epam.shchehlov.services.CatalogService;
@@ -17,10 +18,17 @@ import java.util.List;
 public class ShowMasterServiceCommand extends Command {
     private static final Logger log = Logger.getLogger(ShowMasterServiceCommand.class);
     private static final long serialVersionUID = -8481481565177573283L;
-    private static final String PAGE_MASTER_SERVICE_LIST = "/WEB-INF/jsp/msList.jsp";
 
+    /**
+     * Execution method for ShowMasterServiceCommand command.
+     *
+     * @param request
+     * @param response
+     * @return Address to go once the command is executed.
+     */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        log.debug("Command ShowMasterServiceCommand start");
         HttpSession session = request.getSession();
         log.debug(session.getAttribute("role"));
 
@@ -54,9 +62,8 @@ public class ShowMasterServiceCommand extends Command {
                     break;
             }
         }
-
-
         request.setAttribute("msList", msList);
-        return PAGE_MASTER_SERVICE_LIST;
+        log.debug("Command ShowMasterServiceCommand finished");
+        return Path.MASTER_SERVICE_LIST_PATH;
     }
 }

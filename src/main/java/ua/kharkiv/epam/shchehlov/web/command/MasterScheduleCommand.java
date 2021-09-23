@@ -1,6 +1,7 @@
 package ua.kharkiv.epam.shchehlov.web.command;
 
 import org.apache.log4j.Logger;
+import ua.kharkiv.epam.shchehlov.constant.Path;
 import ua.kharkiv.epam.shchehlov.dao.impl.MasterDaoImpl;
 import ua.kharkiv.epam.shchehlov.dao.impl.CatalogDaoImpl;
 import ua.kharkiv.epam.shchehlov.dao.impl.MeetingDaoImpl;
@@ -30,9 +31,16 @@ public class MasterScheduleCommand extends Command {
     private static final long serialVersionUID = -3281491565171573283L;
     private static final Logger log = Logger.getLogger(MasterScheduleCommand.class);
 
-
+    /**
+     * Execution method for MasterScheduleCommand command.
+     *
+     * @param request
+     * @param response
+     * @return Address to go once the command is executed.
+     */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        log.debug("MasterScheduleCommand starts");
         HttpSession session = request.getSession();
         MasterService masterService = new MasterServiceImpl(new MasterDaoImpl());
         long masterId = (Long) session.getAttribute("accountID");
@@ -95,10 +103,16 @@ public class MasterScheduleCommand extends Command {
         request.setAttribute("daysFromNow", daysFromNow);
         request.setAttribute("dayOfWeek", dayOfWeek);
         request.setAttribute("currentTime", LocalDateTime.now());
-
-        return "/WEB-INF/jsp/masterSchedule.jsp";
+        log.debug("MasterScheduleCommand finished");
+        return Path.MASTER_SCHEDULE_PATH;
     }
 
+    /**
+     * create empty time slots schedule for a day
+     * certain number of days from now
+     *
+     * @param daysFromNow
+     */
     private List<LocalDateTime> createEmptyDailySchedule(int daysFromNow) {
         List<LocalDateTime> emptySchedule = new ArrayList<>();
         LocalDateTime dateTime = LocalDateTime.now();

@@ -25,14 +25,14 @@
                 </tr>
                 <c:forEach items="${schedule}" var="slot" varStatus="loop">
                     <tr>
-                        <td>${slot.dayOfWeek}</td>
-                        <td>${slot.month}, ${slot.dayOfMonth}</td>
+                        <td><fmt:message key="${slot.dayOfWeek}"/></td>
+                        <td><fmt:message key="${slot.month}"/>, ${slot.dayOfMonth}</td>
                         <td>${slot.hour} : 00</td>
                         <td>
                             <form method="post" action="/BeautySaloon_war/controller?command=changeTimeSlot">
                                 <input type="hidden" name="slot" value="${slot}">
                                 <input type="hidden" name="meetingId" value="${meeting.id}">
-                                <input type="submit" class="btn btn-success" value="Choose new">
+                                <input type="submit" class="btn btn-success" value="<fmt:message key="chooseNew"/>">
                             </form>
                         </td>
                     </tr>

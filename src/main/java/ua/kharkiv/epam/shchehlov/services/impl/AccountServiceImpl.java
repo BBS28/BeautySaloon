@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import ua.kharkiv.epam.shchehlov.dao.AccountDao;
 import ua.kharkiv.epam.shchehlov.entity.Account;
 import ua.kharkiv.epam.shchehlov.exceptions.AccountDataException;
+import ua.kharkiv.epam.shchehlov.security.SecurePassword;
+import ua.kharkiv.epam.shchehlov.security.VerifyProvidedPassword;
 import ua.kharkiv.epam.shchehlov.services.AccountService;
 import ua.kharkiv.epam.shchehlov.services.ValidationService;
 
@@ -32,7 +34,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = getByLogin(login);
         log.debug(String.format("account %s", account));
 
-        if(account == null || !account.getPassword().equals(password)) {
+        if(account == null || !VerifyProvidedPassword.isPasswordCorrect(password, account)) {
             log.debug(String.format("Incorrect login or password, %s, %s", account == null, account.getPassword().equals(password)));
             throw new AccountDataException("Incorrect login or password");
         }

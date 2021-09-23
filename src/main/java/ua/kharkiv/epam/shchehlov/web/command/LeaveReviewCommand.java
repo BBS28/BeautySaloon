@@ -1,6 +1,7 @@
 package ua.kharkiv.epam.shchehlov.web.command;
 
 import org.apache.log4j.Logger;
+import ua.kharkiv.epam.shchehlov.constant.Path;
 import ua.kharkiv.epam.shchehlov.dao.impl.MeetingDaoImpl;
 import ua.kharkiv.epam.shchehlov.dao.impl.ReviewDaoImpl;
 import ua.kharkiv.epam.shchehlov.entity.Meeting;
@@ -19,10 +20,17 @@ public class LeaveReviewCommand extends Command {
     private static final long serialVersionUID = 8481491669139873383L;
     private static final Logger log = Logger.getLogger(LeaveReviewCommand.class);
 
+    /**
+     * Execution method for LeaveReviewCommand command.
+     *
+     * @param request
+     * @param response
+     * @return Address to go once the command is executed.
+     */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        log.debug("Command LeaveReviewCommand start");
         MeetingService meetingService = new MeetingServiceImpl(new MeetingDaoImpl());
-
         if ("POST".equalsIgnoreCase(request.getMethod())) {
             long meetingId = Long.parseLong(request.getParameter("meetingId"));
             log.debug(String.format("meetingId - %s", meetingId));
@@ -49,8 +57,8 @@ public class LeaveReviewCommand extends Command {
             long meetingId = Long.parseLong(request.getParameter("meetingId"));
             Meeting meeting = meetingService.getById(meetingId);
             request.setAttribute("meeting", meeting);
-
-            return "/WEB-INF/jsp/review.jsp";
+            log.debug("Command LeaveReviewCommand finished");
+            return Path.REVIEW_PATH;
         }
 
     }

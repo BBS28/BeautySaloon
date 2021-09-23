@@ -1,5 +1,5 @@
 <%@ taglib prefix="dt" uri="/WEB-INF/tld/dateTime.tld" %>
-<%@ include file="/WEB-INF/jspf/head.jspf"%>
+<%@ include file="/WEB-INF/jspf/head.jspf" %>
 <body>
     <%@ include file="/WEB-INF/jspf/navbar.jspf" %>
 
@@ -19,9 +19,9 @@
                 <table class="table">
                     <tr>
                         <th><fmt:message key="date"/>
-                        <a href="/BeautySaloon_war/controller?command=adminCabinet&sort=dateSort">
-                            <span class="glyphicon glyphicon-sort-by-order"></span>
-                        </a>
+                            <a href="/BeautySaloon_war/controller?command=adminCabinet&sort=dateSort">
+                                <span class="glyphicon glyphicon-sort-by-order"></span>
+                            </a>
                         </th>
                         <th></th>
                         <th><fmt:message key="master"/>
@@ -48,28 +48,36 @@
                             <td><dt:formatDT>${cell.dateTime}</dt:formatDT></td>
                             <td>
                                 <c:if test="${cell.dateTime > currentTime}">
-                                <a href="/BeautySaloon_war/controller?command=changeTimeSlot&slotId=${cell.id}"
-                                   class="btn btn-info" role="button"><fmt:message key="change"/></a>
+                                    <a href="/BeautySaloon_war/controller?command=changeTimeSlot&slotId=${cell.id}"
+                                       class="btn btn-info" role="button"><fmt:message key="change"/></a>
                                 </c:if>
                             </td>
                             <td>${cell.catalog.master.name} ${cell.catalog.master.surname}</td>
-                            <td>${cell.catalog.service.name}</td>
+                            <td><fmt:message key="${cell.catalog.service.name}"/></td>
                             <td>${cell.client.name} ${cell.client.surname}</td>
 
                             <td>
                                 <c:choose>
                                     <c:when test="${cell.condition eq 'DONE' and cell.dateTime < currentTime}">
-                                        <a href="/BeautySaloon_war/controller?command=paidDone&meetingId=${cell.id}&pageDate=${cell.dateTime}"
-                                           class="btn btn-warning" role="button">${cell.condition}</a>
+                                        <form method="post" action="/BeautySaloon_war/controller?command=paidDone">
+                                            <input type="hidden" name="meetingId" value="${cell.id}">
+                                            <input type="hidden" name="pageDate" value="${cell.dateTime}">
+                                            <input type="submit" class="btn btn-warning" value="<fmt:message key="${cell.condition}"/>">
+                                        </form>
                                     </c:when>
                                     <c:otherwise>
                                         <c:choose>
                                             <c:when test="${cell.condition eq 'PAID' and cell.dateTime < currentTime}">
-                                                <a href="/BeautySaloon_war/controller?command=paidDone&meetingId=${cell.id}&pageDate=${cell.dateTime}"
-                                                   class="btn btn-success" role="button">${cell.condition}</a>
+                                                <form method="post"
+                                                      action="/BeautySaloon_war/controller?command=paidDone">
+                                                    <input type="hidden" name="meetingId" value="${cell.id}">
+                                                    <input type="hidden" name="pageDate" value="${cell.dateTime}">
+                                                    <input type="submit" class="btn btn-success"
+                                                           value="<fmt:message key="${cell.condition}"/>">
+                                                </form>
                                             </c:when>
                                             <c:otherwise>
-                                                ${cell.condition}
+                                                <fmt:message key="${cell.condition}"/>
                                             </c:otherwise>
                                         </c:choose>
                                     </c:otherwise>
@@ -78,8 +86,11 @@
 
                             <td>
                                 <c:if test="${cell.condition eq 'ACTIVE'}">
-                                    <a href="/BeautySaloon_war/controller?command=cancelMeeting&meetingId=${cell.id}&pageDate=${cell.dateTime}"
-                                       class="btn btn-danger" role="button"><fmt:message key="cancel"/></a>
+                                    <form method="post" action="/BeautySaloon_war/controller?command=cancelMeeting">
+                                        <input type="hidden" name="meetingId" value="${cell.id}">
+                                        <input type="hidden" name="pageDate" value="${cell.dateTime}">
+                                        <input type="submit" class="btn btn-danger" value="<fmt:message key="cancel"/>">
+                                    </form>
                                 </c:if>
                             </td>
 

@@ -2,7 +2,7 @@ package ua.kharkiv.epam.shchehlov.dao.impl;
 
 import org.apache.log4j.Logger;
 import ua.kharkiv.epam.shchehlov.dao.ClientDao;
-import ua.kharkiv.epam.shchehlov.dao.db.Constant;
+import ua.kharkiv.epam.shchehlov.constant.Constant;
 import ua.kharkiv.epam.shchehlov.dao.db.DBManager;
 import ua.kharkiv.epam.shchehlov.entity.Client;
 
@@ -43,7 +43,7 @@ public class ClientDaoImpl implements ClientDao {
             }
             con.commit();
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, ps, rs);
         }
@@ -67,7 +67,7 @@ public class ClientDaoImpl implements ClientDao {
             }
             con.commit();
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, st, rs);
         }
@@ -90,7 +90,7 @@ public class ClientDaoImpl implements ClientDao {
             }
             con.commit();
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, ps, rs);
         }
@@ -115,7 +115,7 @@ public class ClientDaoImpl implements ClientDao {
             try {
                 con.rollback();
             } catch (SQLException ex) {
-                log.error("cannot obtain categories", ex);
+                log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
             }
         } finally {
             dbManager.close(con, ps);
@@ -144,8 +144,9 @@ public class ClientDaoImpl implements ClientDao {
                 }
             }
             con.commit();
+            log.debug("Recorded to bd : " + client);
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, ps, rs);
         }
@@ -176,7 +177,7 @@ public class ClientDaoImpl implements ClientDao {
             try {
                 con.rollback();
             } catch (SQLException ex) {
-                log.error("cannot obtain categories", ex);
+                log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
             }
         } finally {
             dbManager.close(con, ps);

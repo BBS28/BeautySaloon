@@ -1,4 +1,4 @@
-package ua.kharkiv.epam.shchehlov.dao.db;
+package ua.kharkiv.epam.shchehlov.constant;
 
 public class Constant {
     private Constant() {
@@ -37,5 +37,7 @@ public class Constant {
     public static final String MEETING_MASTER_SERVICE_ID = "master_service_id";
     public static final String MEETING_MEET_TIME = "meet_time";
 
+    public static final String ERROR_CANNOT_OBTAIN_CATEGORIES = "Cannot obtain categories";
+    public static final String DATE_TIME_PATTERN ="uuuu-MM-dd HH:mm:ss";
 
 }

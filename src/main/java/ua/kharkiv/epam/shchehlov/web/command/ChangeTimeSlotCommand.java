@@ -1,6 +1,7 @@
 package ua.kharkiv.epam.shchehlov.web.command;
 
 import org.apache.log4j.Logger;
+import ua.kharkiv.epam.shchehlov.constant.Path;
 import ua.kharkiv.epam.shchehlov.dao.impl.MeetingDaoImpl;
 import ua.kharkiv.epam.shchehlov.entity.*;
 import ua.kharkiv.epam.shchehlov.services.MeetingService;
@@ -20,17 +21,26 @@ public class ChangeTimeSlotCommand extends Command {
     private static final long serialVersionUID = 8481493066371573283L;
     private static final Logger log = Logger.getLogger(ChangeTimeSlotCommand.class);
 
+    /**
+     * Execution method for ChangeTimeSlotCommand command.
+     *
+     * @param request
+     * @param response
+     * @return Address to go once the command is executed.
+     */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        log.debug("Command ChangeTimeSlotCommand start");
         MeetingService meetingService = new MeetingServiceImpl(new MeetingDaoImpl());
-
+        //inserts meeting with new time and deletes previous
         if ("POST".equalsIgnoreCase(request.getMethod())) {
+            log.debug("Case with Method post start");
             long previousMeetingId = Long.parseLong(request.getParameter("meetingId"));
             log.debug(String.format("meetingId - %s", previousMeetingId));
             Meeting previousMeeting = meetingService.getById(previousMeetingId);
             LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("slot"));
             log.debug(String.format("slot dateTime - %s", dateTime));
-
+            //create meeting with new parameters
             Meeting newMeeting = new Meeting();
             newMeeting.setCondition(Condition.ACTIVE);
             newMeeting.setCatalog(previousMeeting.getCatalog());
@@ -41,28 +51,24 @@ public class ChangeTimeSlotCommand extends Command {
                     newMeeting.getCatalog(),
                     newMeeting.getClient().getName(),
                     newMeeting.getDateTime()));
-
+            //delete old meeting
             if (meetingService.insert(newMeeting) != null) {
                 meetingService.deleteById(previousMeetingId);
             }
-
-            //Todo: throw new exception
+            log.debug("Case with Method post finished");
             return "controller?command=adminCabinet";
 
         } else {
-
+            //create schedule
+            log.debug("Case with Method get start");
             long meetingId = Long.parseLong(request.getParameter("slotId"));
             Meeting meeting = meetingService.getById(meetingId);
             List<Meeting> meetingList = meetingService.getAll();
-
             Master master = meeting.getCatalog().getMaster();
-            Catalog catalog = meeting.getCatalog();
             long masterId = master.getId();
-
             meetingList.removeIf(nextMeeting -> nextMeeting.getCatalog().getMaster().getId() != masterId);
             List<LocalDateTime> emptySchedule = createEmptyFutureSchedule(14);
             Iterator<LocalDateTime> timeIterator = emptySchedule.iterator();
-
             while (timeIterator.hasNext()) {
                 LocalDateTime time = timeIterator.next();
                 for (Meeting m : meetingList) {
@@ -73,14 +79,20 @@ public class ChangeTimeSlotCommand extends Command {
                 }
             }
 
-
             request.setAttribute("schedule", emptySchedule);
             request.setAttribute("meeting", meeting);
-            return "/WEB-INF/jsp/changeTS.jsp";
+            log.debug("Command ChangeTimeSlotCommand finished");
+            log.debug("Case with Method get finished");
+            return Path.CHANGE_TS_PATH;
         }
-
     }
 
+    /**
+     * create empty time slots schedule from now
+     * for a certain number of days except Sunday
+     *
+     * @param days
+     */
     static List<LocalDateTime> createEmptyFutureSchedule(int days) {
         List<LocalDateTime> emptySchedule = new ArrayList<>();
         LocalDateTime dateTime = LocalDateTime.now();

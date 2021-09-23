@@ -26,12 +26,12 @@
                     </tr>
                     <c:forEach items="${clientMeetings}" var="cell" varStatus="loop">
                         <tr>
-                            <td>${cell.dateTime.dayOfWeek}</td>
-                            <td nowrap>${cell.dateTime.month}, ${cell.dateTime.dayOfMonth}</td>
+                            <td><fmt:message key="${cell.dateTime.dayOfWeek}"/></td>
+                            <td nowrap><fmt:message key="${cell.dateTime.month}"/>, ${cell.dateTime.dayOfMonth}</td>
                             <td>${cell.dateTime.hour} : 00</td>
-                            <td>${cell.catalog.service.name}</td>
+                            <td><fmt:message key="${cell.catalog.service.name}"/></td>
                             <td>${cell.catalog.master.name} ${cell.catalog.master.surname}</td>
-                            <td>${cell.condition}</td>
+                            <td><fmt:message key="${cell.condition}"/></td>
                             <td>
                                 <c:if test="${cell.reviewId == 0 and (cell.condition eq 'DONE' or cell.condition eq 'PAID')}">
                                     <a href="/BeautySaloon_war/controller?command=leaveReview&meetingId=${cell.id}"

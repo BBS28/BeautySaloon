@@ -1,6 +1,7 @@
 package ua.kharkiv.epam.shchehlov.web.command;
 
 import org.apache.log4j.Logger;
+import ua.kharkiv.epam.shchehlov.constant.Path;
 import ua.kharkiv.epam.shchehlov.dao.impl.AccountDaoImpl;
 import ua.kharkiv.epam.shchehlov.entity.Account;
 import ua.kharkiv.epam.shchehlov.exceptions.AccountDataException;
@@ -17,8 +18,16 @@ public class LoginCommand extends Command {
     private static final long serialVersionUID = 8481491669171573283L;
     private static final Logger log = Logger.getLogger(LoginCommand.class);
 
+    /**
+     * Execution method for LoginCommand command.
+     *
+     * @param request
+     * @param response
+     * @return Address to go once the command is executed.
+     */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        log.debug("Command LoginCommand start");
         HttpSession session = request.getSession();
         session.setAttribute("role", "guest");
         log.debug(request.getMethod());
@@ -35,14 +44,17 @@ public class LoginCommand extends Command {
                 session.setAttribute("role", role);
                 session.setAttribute("accountID", account.getId());
                 log.debug(String.format("role ==> %s", role));
+                log.debug("Command LoginCommand finished");
+                request.setAttribute("requestTypePost", "post");
                 return "/controller?command=showMasterServices";
             } catch (AccountDataException ex) {
                 log.warn(ex.getMessage(), ex);
                 request.setAttribute("warn", "Invalid LOGIN or PASSWORD");
-                return "/WEB-INF/jsp/login.jsp";
+                return Path.LOGIN_PATH;
             }
         } else {
-            return "/WEB-INF/jsp/login.jsp";
+            log.debug("Command LoginCommand finished");
+            return Path.LOGIN_PATH;
         }
     }
 }

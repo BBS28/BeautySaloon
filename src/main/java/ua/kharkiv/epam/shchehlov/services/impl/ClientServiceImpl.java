@@ -6,6 +6,7 @@ import ua.kharkiv.epam.shchehlov.dao.impl.AccountDaoImpl;
 import ua.kharkiv.epam.shchehlov.entity.Account;
 import ua.kharkiv.epam.shchehlov.entity.Client;
 import ua.kharkiv.epam.shchehlov.exceptions.AccountDataException;
+import ua.kharkiv.epam.shchehlov.security.SecurePassword;
 import ua.kharkiv.epam.shchehlov.services.AccountService;
 import ua.kharkiv.epam.shchehlov.services.ClientService;
 import ua.kharkiv.epam.shchehlov.services.ValidationService;
@@ -75,11 +76,12 @@ public class ClientServiceImpl implements ClientService {
 
         Client client = new Client();
         client.setLogin(login);
-        client.setPassword(password);
+        client.setPassword(SecurePassword.getSecurePassword(password));
         client.setName(name);
         client.setSurname(surname);
         client.setEmail(email);
 
+        log.debug("client after hash : " +  client);
         client = insert(client);
 
         return client;

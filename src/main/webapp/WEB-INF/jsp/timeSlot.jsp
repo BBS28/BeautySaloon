@@ -22,8 +22,8 @@
                     </tr>
                     <c:forEach items="${schedule}" var="cell" varStatus="loop">
                         <tr>
-                            <td>${cell.key.dayOfWeek}</td>
-                            <td>${cell.key.month}, ${cell.key.dayOfMonth}</td>
+                            <td><fmt:message key="${cell.key.dayOfWeek}"/></td>
+                            <td><fmt:message key="${cell.key.month}"/>, ${cell.key.dayOfMonth}</td>
                             <td>${cell.key.hour} : 00</td>
                             <c:if test="${cell.value == false}">
                                 <td>
