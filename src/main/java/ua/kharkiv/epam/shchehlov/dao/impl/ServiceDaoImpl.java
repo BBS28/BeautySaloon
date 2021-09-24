@@ -2,7 +2,7 @@ package ua.kharkiv.epam.shchehlov.dao.impl;
 
 import org.apache.log4j.Logger;
 import ua.kharkiv.epam.shchehlov.dao.ServiceDao;
-import ua.kharkiv.epam.shchehlov.dao.db.Constant;
+import ua.kharkiv.epam.shchehlov.constant.Constant;
 import ua.kharkiv.epam.shchehlov.dao.db.DBManager;
 import ua.kharkiv.epam.shchehlov.entity.Service;
 
@@ -24,24 +24,22 @@ public class ServiceDaoImpl implements ServiceDao {
 
     @Override
     public List<Service> getAll() {
-        Service service = null;
         List<Service> serviceList = new ArrayList<>();
         Statement st = null;
         ResultSet rs = null;
         Connection con = null;
-        log.debug("logger works");
         try {
             con = dbManager.getConnection();
-            System.out.println("==>" + con);
             st = con.createStatement();
             rs = st.executeQuery(FIND_ALL_SERVICES);
+            Service service;
             while (rs.next()) {
                 service = extractService(rs);
                 serviceList.add(service);
             }
             con.commit();
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, st, rs);
         }
@@ -64,7 +62,7 @@ public class ServiceDaoImpl implements ServiceDao {
             }
             con.commit();
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, ps, rs);
         }
@@ -87,7 +85,7 @@ public class ServiceDaoImpl implements ServiceDao {
             }
             con.commit();
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, ps, rs);
         }
@@ -112,9 +110,9 @@ public class ServiceDaoImpl implements ServiceDao {
             try {
                 con.rollback();
             } catch (SQLException ex) {
-                log.error("cannot obtain categories", ex);
+                log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
             }
-        }finally {
+        } finally {
             dbManager.close(con, ps);
         }
         return result;
@@ -140,7 +138,7 @@ public class ServiceDaoImpl implements ServiceDao {
             }
             con.commit();
         } catch (SQLException ex) {
-            log.error("cannot obtain categories", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, ps, rs);
         }
@@ -166,12 +164,12 @@ public class ServiceDaoImpl implements ServiceDao {
             }
             con.commit();
         } catch (SQLException e) {
-           try {
-               con.rollback();
-           } catch (SQLException ex) {
-              log.error("cannot obtain categories", ex);
-           }
-        }finally {
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
+            }
+        } finally {
             dbManager.close(con, ps);
         }
         return result;

@@ -1,29 +1,28 @@
 package ua.kharkiv.epam.shchehlov.entity;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 public class Meeting extends Entity {
-    private Account user;
-    private MasterService masterService;
+    private Account client;
+    private Catalog catalog;
     private Condition condition;
     private LocalDateTime dateTime;
-    private BigInteger review;
+    private long reviewId;
 
-    public Account getUser() {
-        return user;
+    public Account getClient() {
+        return client;
     }
 
-    public void setUser(Account user) {
-        this.user = user;
+    public void setClient(Account client) {
+        this.client = client;
     }
 
-    public MasterService getMasterService() {
-        return masterService;
+    public Catalog getCatalog() {
+        return catalog;
     }
 
-    public void setMasterService(MasterService masterService) {
-        this.masterService = masterService;
+    public void setCatalog(Catalog catalog) {
+        this.catalog = catalog;
     }
 
     public Condition getCondition() {
@@ -42,11 +41,11 @@ public class Meeting extends Entity {
         this.dateTime = dateTime;
     }
 
-    public BigInteger getReview() {
-        return review;
+    public long getReviewId() {
+        return reviewId;
     }
 
-    public void setReview(BigInteger review) {
-        this.review = review;
+    public void setReviewId(long reviewId) {
+        this.reviewId = reviewId;
     }
 }

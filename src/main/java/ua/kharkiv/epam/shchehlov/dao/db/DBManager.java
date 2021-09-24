@@ -24,17 +24,17 @@ public class DBManager {
 
     private DataSource ds;
 
-    private  DBManager() {
+    private DBManager() {
         try {
             Context initContext = new InitialContext();
-            Context envContext = (Context)initContext.lookup("java:comp/env");
+            Context envContext = (Context) initContext.lookup("java:comp/env");
             ds = (DataSource) envContext.lookup("jdbc/BSdb");
         } catch (NamingException ex) {
             log.error("Cannot obtain DataSource", ex);
         }
     }
 
-    public Connection getConnection()  {
+    public Connection getConnection() {
         Connection connection = null;
         try {
             connection = ds.getConnection();

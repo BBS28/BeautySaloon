@@ -2,6 +2,7 @@ package ua.kharkiv.epam.shchehlov.entity;
 
 public class Master extends Account {
     private Service service;
+    private Meeting meeting;
     private double rate;
 
     public Service getService() {
@@ -18,5 +19,13 @@ public class Master extends Account {
 
     public void setRate(double rate) {
         this.rate = rate;
+    }
+
+    public Meeting getMeeting() {
+        return meeting;
+    }
+
+    public void setMeeting(Meeting meeting) {
+        this.meeting = meeting;
     }
 }
