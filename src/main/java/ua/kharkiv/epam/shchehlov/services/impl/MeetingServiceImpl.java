@@ -4,6 +4,7 @@ import ua.kharkiv.epam.shchehlov.dao.MeetingDao;
 import ua.kharkiv.epam.shchehlov.entity.Meeting;
 import ua.kharkiv.epam.shchehlov.services.MeetingService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class MeetingServiceImpl implements MeetingService {
@@ -36,5 +37,10 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public boolean update(Meeting item) {
         return meetingDao.update(item);
+    }
+
+    @Override
+    public List<Meeting> getAllByDate(LocalDate date) {
+        return meetingDao.getAllByDate(date);
     }
 }

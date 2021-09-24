@@ -93,7 +93,7 @@ public class ChangeTimeSlotCommand extends Command {
      *
      * @param days
      */
-    static List<LocalDateTime> createEmptyFutureSchedule(int days) {
+    private static List<LocalDateTime> createEmptyFutureSchedule(int days) {
         List<LocalDateTime> emptySchedule = new ArrayList<>();
         LocalDateTime dateTime = LocalDateTime.now();
         dateTime = dateTime.minusMinutes(dateTime.getMinute());

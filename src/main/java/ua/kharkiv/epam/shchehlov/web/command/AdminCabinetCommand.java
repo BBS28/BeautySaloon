@@ -16,8 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class AdminCabinetCommand extends Command {
@@ -39,7 +41,38 @@ public class AdminCabinetCommand extends Command {
         AccountService accountService = new AccountServiceImpl(new AccountDaoImpl());
         Account admin = accountService.getById(adminId);
         MeetingService meetingService = new MeetingServiceImpl(new MeetingDaoImpl());
-        List<Meeting> meetingList = meetingService.getAll();
+        int day;
+        if (request.getParameter("day") == null) {
+            day = 0;
+        } else {
+            day = Integer.parseInt(request.getParameter("day"));
+        }
+        log.debug(String.format("day = %s", day));
+
+        String scroll;
+        if (request.getParameter("scroll") != null) {
+            scroll = request.getParameter("scroll");
+        } else {
+            scroll = "forward";
+        }
+        List<Meeting> meetingList;
+        do {
+            log.debug(String.format("day ==> %s", day));
+            log.debug(String.format("scroll ==> %s", scroll));
+            LocalDate date = LocalDateTime.now().plusDays(day).toLocalDate();
+            log.debug(String.format("date ==> %s", date));
+            meetingList = meetingService.getAllByDate(date);
+            if (!meetingList.isEmpty()) {
+                log.debug("list is not empty");
+                break;
+            }
+            if (scroll.equals("forward")) {
+                day++;
+            } else if (scroll.equals("back")) {
+                day--;
+            }
+        } while (day < 14 && day > -60);
+//        List<Meeting> meetingList = meetingService.getAll();
         String sortParameter;
         //sort list of Meeting
         if (request.getParameter("sort") != null) {
@@ -65,6 +98,7 @@ public class AdminCabinetCommand extends Command {
         request.setAttribute("admin", admin);
         request.setAttribute("meetingList", meetingList);
         request.setAttribute("currentTime", LocalDateTime.now());
+        request.setAttribute("day", day);
 
         log.debug("Command  AdminCabinetCommand finished");
         return Path.ADMIN_PAGE;

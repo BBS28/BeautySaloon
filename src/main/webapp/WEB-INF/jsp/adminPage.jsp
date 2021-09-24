@@ -59,17 +59,18 @@
                             <td>
                                 <c:choose>
                                     <c:when test="${cell.condition eq 'DONE' and cell.dateTime < currentTime}">
-                                        <form method="post" action="/BeautySaloon_war/controller?command=paidDone">
+                                        <form method="post" action="/BeautySaloon_war/controller?command=paidDone&day=${day}">
                                             <input type="hidden" name="meetingId" value="${cell.id}">
                                             <input type="hidden" name="pageDate" value="${cell.dateTime}">
-                                            <input type="submit" class="btn btn-warning" value="<fmt:message key="${cell.condition}"/>">
+                                            <input type="submit" class="btn btn-warning"
+                                                   value="<fmt:message key="${cell.condition}"/>">
                                         </form>
                                     </c:when>
                                     <c:otherwise>
                                         <c:choose>
                                             <c:when test="${cell.condition eq 'PAID' and cell.dateTime < currentTime}">
                                                 <form method="post"
-                                                      action="/BeautySaloon_war/controller?command=paidDone">
+                                                      action="/BeautySaloon_war/controller?command=paidDone&day=${day}">
                                                     <input type="hidden" name="meetingId" value="${cell.id}">
                                                     <input type="hidden" name="pageDate" value="${cell.dateTime}">
                                                     <input type="submit" class="btn btn-success"
@@ -97,6 +98,19 @@
                         </tr>
                     </c:forEach>
                 </table>
+
+                <c:if test="${day > -60}">
+                    <a href="/BeautySaloon_war/controller?command=adminCabinet&scroll=back&day=${day - 1}"
+                       class="btn btn-info" role="button"><fmt:message key="previousDay"/></a>
+                </c:if>
+
+                <a href="/BeautySaloon_war/controller?command=adminCabinet&scroll=back&day=${0}"
+                   class="btn btn-info" role="button"><fmt:message key="today"/></a>
+
+                <c:if test="${day < 14}">
+                    <a href="/BeautySaloon_war/controller?command=adminCabinet&scroll=forward&day=${day + 1}"
+                       class="btn btn-info" role="button"><fmt:message key="nextDay"/></a>
+                </c:if>
             </div>
 
         </div>

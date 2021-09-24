@@ -35,11 +35,12 @@ public class PaidServiceCommand extends Command {
             meeting.setCondition(Condition.PAID);
         }
         boolean result = meetingService.update(meeting);
+        int day = Integer.parseInt(request.getParameter("day"));
         if("POST".equalsIgnoreCase(request.getMethod())){
             request.setAttribute("requestTypePost", "post");
         }
         log.debug(result);
         log.debug("Command PaidServiceCommand finished");
-        return "/controller?command=adminCabinet";
+        return String.format("/controller?command=adminCabinet&day=%s", day);
     }
 }

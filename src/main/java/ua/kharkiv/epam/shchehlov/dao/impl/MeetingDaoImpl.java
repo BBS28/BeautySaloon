@@ -7,6 +7,7 @@ import ua.kharkiv.epam.shchehlov.dao.db.DBManager;
 import ua.kharkiv.epam.shchehlov.entity.*;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class MeetingDaoImpl implements MeetingDao {
             "UPDATE meeting " +
                     "SET meeting.condition = ?, meeting.account_id = ?, meeting.review_id = ?, meeting.master_service_id = ?, meeting.meet_time = ?" +
                     " WHERE id = ?";
+    private static final String FIND_ALL_MEETINGS_BY_DATE = "SELECT * FROM meeting WHERE CAST(meeting.meet_time AS DATE) = DATE ?";
 
 
     @Override
@@ -50,6 +52,32 @@ public class MeetingDaoImpl implements MeetingDao {
             log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
         } finally {
             dbManager.close(con, st, rs);
+        }
+        return meetingList;
+    }
+
+    @Override
+    public List<Meeting> getAllByDate(LocalDate date) {
+        log.debug(String.format("date - %s", date));
+        List<Meeting> meetingList = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection con = null;
+        Meeting meeting;
+        try {
+            con = dbManager.getConnection();
+            ps = con.prepareStatement(FIND_ALL_MEETINGS_BY_DATE);
+            ps.setString(1, String.valueOf(date));
+            log.debug(String.format("ps - %s", ps));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                meeting = extractMeeting(rs);
+                meetingList.add(meeting);
+            }
+        } catch (SQLException ex) {
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CATEGORIES, ex);
+        } finally {
+            dbManager.close(con, ps, rs);
         }
         return meetingList;
     }
@@ -150,8 +178,8 @@ public class MeetingDaoImpl implements MeetingDao {
             Integer nullInt = null;
             if (meeting.getReviewId() != 0) {
                 ps.setLong(3, meeting.getReviewId());
-            }else {
-                ps.setNull(3,  Types.BIGINT);
+            } else {
+                ps.setNull(3, Types.BIGINT);
             }
             ps.setLong(4, meeting.getCatalog().getId());
             ps.setTimestamp(5, Timestamp.valueOf(meeting.getDateTime()

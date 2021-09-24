@@ -7,7 +7,7 @@
         <div class="col-sm-3 col-md-2">
             <h4><fmt:message key="info"/>:</h4>
             <p><b><fmt:message key="master"/>:</b> ${meeting.catalog.master.surname} ${meeting.catalog.master.name}</p>
-            <p><b><fmt:message key="service"/>:</b> ${meeting.catalog.service.name}</p>
+            <p><b><fmt:message key="service"/>:</b> <fmt:message key="${meeting.catalog.service.name}"/></p>
             <p></p>
             <a href="/BeautySaloon_war/controller?command=adminCabinet" role="button"
                class="btn btn-danger"><fmt:message key="cancel"/></a>
