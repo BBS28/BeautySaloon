@@ -15,9 +15,13 @@ public class Path {
     public static final String MASTER_SERVICE_LIST_PATH = "/WEB-INF/jsp/msList.jsp";
     public static final String SHOW_REVIEW_PATH = "/WEB-INF/jsp/showReviews.jsp";
     public static final String TIME_SLOTS_LIST_PATH = "/WEB-INF/jsp/timeSlot.jsp";
+    public static final String ERROR_PATH = "/WEB-INF/jsp/error.jsp";
 
-
-
-
-
+    public static final String COMMAND_ADMIN_CABINET = "controller?command=adminCabinet";
+    public static final String COMMAND_SLASH_ADMIN_CABINET = "/controller?command=adminCabinet";
+    public static final String COMMAND_CLIENT_CABINET = "controller?command=clientCabinet";
+    public static final String COMMAND_MASTER_SERVICES = "/controller?command=showMasterServices";
+    public static final String COMMAND_TIME_SLOTS = "controller?command=showTimeSlots";
+    public static final String COMMAND_MASTER_SCHEDULE = "controller?command=masterSchedule";
+    public static final String COMMAND_LOGIN = "/controller?command=logIn";
 }

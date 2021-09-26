@@ -18,6 +18,7 @@
             <div class="col-sm-4">
                 <h1>Opps...</h1>
                 <p>Sorry, an error occurred.</p>
+                <p>${errorMessage}</p>
             </div>
             <div class="col-sm-4"></div>
         </div>

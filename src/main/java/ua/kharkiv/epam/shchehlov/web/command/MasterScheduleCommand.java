@@ -1,18 +1,19 @@
 package ua.kharkiv.epam.shchehlov.web.command;
 
 import org.apache.log4j.Logger;
+import ua.kharkiv.epam.shchehlov.constant.Constant;
 import ua.kharkiv.epam.shchehlov.constant.Path;
-import ua.kharkiv.epam.shchehlov.dao.impl.MasterDaoImpl;
 import ua.kharkiv.epam.shchehlov.dao.impl.CatalogDaoImpl;
+import ua.kharkiv.epam.shchehlov.dao.impl.MasterDaoImpl;
 import ua.kharkiv.epam.shchehlov.dao.impl.MeetingDaoImpl;
 import ua.kharkiv.epam.shchehlov.entity.Catalog;
 import ua.kharkiv.epam.shchehlov.entity.Master;
 import ua.kharkiv.epam.shchehlov.entity.Meeting;
-import ua.kharkiv.epam.shchehlov.services.MasterService;
 import ua.kharkiv.epam.shchehlov.services.CatalogService;
+import ua.kharkiv.epam.shchehlov.services.MasterService;
 import ua.kharkiv.epam.shchehlov.services.MeetingService;
-import ua.kharkiv.epam.shchehlov.services.impl.MasterServiceImpl;
 import ua.kharkiv.epam.shchehlov.services.impl.CatalogServiceImpl;
+import ua.kharkiv.epam.shchehlov.services.impl.MasterServiceImpl;
 import ua.kharkiv.epam.shchehlov.services.impl.MeetingServiceImpl;
 
 import javax.servlet.ServletException;
@@ -30,6 +31,14 @@ import java.util.Map;
 public class MasterScheduleCommand extends Command {
     private static final long serialVersionUID = -3281491565171573283L;
     private static final Logger log = Logger.getLogger(MasterScheduleCommand.class);
+    private static final String START_COMMAND = "MasterScheduleCommand starts";
+    private static final String END_COMMAND = "MasterScheduleCommand finished";
+    private static final String ACCOUNT_ID = "accountID";
+    private static final String SCHEDULE_DAY = "scheduleDay";
+    private static final String MASTER_DAY_SCHEDULE = "masterDaySchedule";
+    private static final String DAYS_FROM_NOW = "daysFromNow";
+    private static final String DAY_OF_WEEK = "dayOfWeek";
+    private static final String CURRENT_TIME = "currentTime";
 
     /**
      * Execution method for MasterScheduleCommand command.
@@ -40,10 +49,10 @@ public class MasterScheduleCommand extends Command {
      */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        log.debug("MasterScheduleCommand starts");
+        log.debug(START_COMMAND);
         HttpSession session = request.getSession();
         MasterService masterService = new MasterServiceImpl(new MasterDaoImpl());
-        long masterId = (Long) session.getAttribute("accountID");
+        long masterId = (Long) session.getAttribute(ACCOUNT_ID);
         Master master = masterService.getById(masterId);
 
         CatalogService catalogService = new CatalogServiceImpl(new CatalogDaoImpl());
@@ -69,12 +78,11 @@ public class MasterScheduleCommand extends Command {
         }
 
         int daysFromNow;
-        if (request.getParameter("scheduleDay") == null) {
+        if (request.getParameter(SCHEDULE_DAY) == null) {
             daysFromNow = 0;
         } else {
-            daysFromNow = Integer.parseInt(request.getParameter("scheduleDay"));
+            daysFromNow = Integer.parseInt(request.getParameter(SCHEDULE_DAY));
         }
-
         log.debug(daysFromNow);
         DayOfWeek dayOfWeek = null;
 
@@ -84,7 +92,7 @@ public class MasterScheduleCommand extends Command {
             dayOfWeek = d.getDayOfWeek();
         }
 
-        if (dayOfWeek.equals(DayOfWeek.SUNDAY)) {
+        if (DayOfWeek.SUNDAY.equals(dayOfWeek)) {
             daysFromNow++;
             emptyDailySchedule = createEmptyDailySchedule(daysFromNow);
             dayOfWeek = DayOfWeek.MONDAY;
@@ -98,12 +106,12 @@ public class MasterScheduleCommand extends Command {
             masterDaySchedule.replace(meeting.getDateTime(), meeting);
         }
 
-        request.setAttribute("masterDaySchedule", masterDaySchedule);
-        request.setAttribute("master", master);
-        request.setAttribute("daysFromNow", daysFromNow);
-        request.setAttribute("dayOfWeek", dayOfWeek);
-        request.setAttribute("currentTime", LocalDateTime.now());
-        log.debug("MasterScheduleCommand finished");
+        request.setAttribute(MASTER_DAY_SCHEDULE, masterDaySchedule);
+        request.setAttribute(Constant.MASTER, master);
+        request.setAttribute(DAYS_FROM_NOW, daysFromNow);
+        request.setAttribute(DAY_OF_WEEK, dayOfWeek);
+        request.setAttribute(CURRENT_TIME, LocalDateTime.now());
+        log.debug(END_COMMAND);
         return Path.MASTER_SCHEDULE_PATH;
     }
 
@@ -117,18 +125,18 @@ public class MasterScheduleCommand extends Command {
         List<LocalDateTime> emptySchedule = new ArrayList<>();
         LocalDateTime dateTime = LocalDateTime.now();
         log.debug(dateTime);
-        dateTime = dateTime.minusHours(dateTime.getHour() - 8);
+        dateTime = dateTime.minusHours(dateTime.getHour() - Constant.HOURS_BEFORE_WORKING_DAY_STARTS);
         dateTime = dateTime.minusMinutes(dateTime.getMinute());
         dateTime = dateTime.minusSeconds(dateTime.getSecond());
         dateTime = dateTime.minusNanos(dateTime.getNano());
         log.debug(dateTime);
-        int deltaWorkDay = 24 * daysFromNow;
+        int deltaWorkDay = Constant.HOURS_PER_DAY * daysFromNow;
         log.debug(deltaWorkDay);
-        int deltaWorkHours = 18 - dateTime.getHour();
+        int deltaWorkHours = Constant.END_WORKING_DAY_HOUR - dateTime.getHour();
         log.debug(deltaWorkHours);
         for (int i = deltaWorkDay; i < deltaWorkDay + deltaWorkHours; i++) {
             LocalDateTime timeCell = dateTime.plusHours(i);
-            if (timeCell.getHour() < 18 && timeCell.getHour() > 8 ) {
+            if (timeCell.getHour() < Constant.END_WORKING_DAY_HOUR && timeCell.getHour() >= Constant.START_WORKING_DAY_HOUR) {
                 emptySchedule.add(timeCell);
             }
         }

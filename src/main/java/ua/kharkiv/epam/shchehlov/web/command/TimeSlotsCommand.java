@@ -1,6 +1,7 @@
 package ua.kharkiv.epam.shchehlov.web.command;
 
 import org.apache.log4j.Logger;
+import ua.kharkiv.epam.shchehlov.constant.Constant;
 import ua.kharkiv.epam.shchehlov.constant.Path;
 import ua.kharkiv.epam.shchehlov.dao.impl.CatalogDaoImpl;
 import ua.kharkiv.epam.shchehlov.dao.impl.MeetingDaoImpl;
@@ -16,7 +17,6 @@ import ua.kharkiv.epam.shchehlov.services.impl.MeetingServiceImpl;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -28,6 +28,13 @@ import java.util.Map;
 public class TimeSlotsCommand extends Command {
     private static final long serialVersionUID = -8481491565171573283L;
     private static final Logger log = Logger.getLogger(TimeSlotsCommand.class);
+    private static final String START_COMMAND = "Command TimeSlotsCommand start";
+    private static final String END_COMMAND = "Command TimeSlotsCommand finished";
+    private static final String MS_ID = "msId";
+    private static final String SCHEDULE_DAY = "scheduleDay";
+    private static final String DAYS_FROM_NOW = "daysFromNow";
+    private static final String DAY_OF_WEEK = "dayOfWeek";
+    private static final String CURRENT_TIME = "currentTime";
 
     /**
      * Execution method for TimeSlotsCommand command.
@@ -38,13 +45,14 @@ public class TimeSlotsCommand extends Command {
      */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        log.debug(START_COMMAND);
         CatalogService catalogService = new CatalogServiceImpl(new CatalogDaoImpl());
-        log.debug("msId= " + request.getParameter("msId"));
+        log.debug(MS_ID + Constant.POINTER + request.getParameter(MS_ID));
 
-        long masterServiceId = Long.parseLong(String.valueOf(request.getParameter("msId")));
+        long masterServiceId = Long.parseLong(String.valueOf(request.getParameter(MS_ID)));
         Catalog catalog = catalogService.getById(masterServiceId);
         Master master = catalog.getMaster();
-        log.debug("master = " + master);
+        log.debug(Constant.MASTER + Constant.POINTER + master);
         List<Catalog> catalogList = catalogService.getAll();
         List<Catalog> allCatalogs = new ArrayList<>();
         for (Catalog c : catalogList) {
@@ -62,14 +70,8 @@ public class TimeSlotsCommand extends Command {
             for (Catalog ms : allCatalogs) {
                 if (m.getCatalog().getId().equals(ms.getId())) {
                     allMasterMeetings.add(m);
-//                    log.debug("added " + m + " to allMasterMeetings" + " master - " + m.getMasterService().getMaster().getSurname() +
-//                            " condition = " + m.getCondition());
                 }
             }
-        }
-
-        for (Meeting m : allMasterMeetings) {
-            log.debug("allMasterMeetings, element - " + m.getCondition() + " " + m.getDateTime());
         }
 
         //All ACTIVE meeting's date, time
@@ -80,27 +82,19 @@ public class TimeSlotsCommand extends Command {
             }
         }
 
-        for (LocalDateTime m : masterRegistrations) {
-            log.debug("masterRegistrations, element - " + m);
-        }
-
         int daysFromNow;
-        if (request.getParameter("scheduleDay") != null) {
-            daysFromNow = Integer.parseInt(request.getParameter("scheduleDay"));
+        if (request.getParameter(SCHEDULE_DAY) != null) {
+            daysFromNow = Integer.parseInt(request.getParameter(SCHEDULE_DAY));
         } else {
             daysFromNow = 0;
         }
-        log.debug(String.format("daysFromNow - %s", daysFromNow));
 
         DayOfWeek dayOfWeek = LocalDateTime.now().plusDays(daysFromNow).getDayOfWeek();
 
-        log.debug(String.format("dayOfWeek 1 - %s", dayOfWeek));
         if (dayOfWeek.equals(DayOfWeek.SUNDAY)) {
             daysFromNow++;
             dayOfWeek = DayOfWeek.MONDAY;
         }
-        log.debug(String.format("dayOfWeek 2 - %s", dayOfWeek));
-
 
         //Creating empty slots for current daysFromNow
         List<LocalDateTime> emptySchedule = createEmptyDaySchedule(daysFromNow);
@@ -108,7 +102,6 @@ public class TimeSlotsCommand extends Command {
             emptySchedule = createEmptyDaySchedule(++daysFromNow);
         }
 
-        //
         Map<LocalDateTime, Boolean> schedule = new LinkedHashMap<>();
         for (LocalDateTime t : emptySchedule) {
             schedule.put(t, false);
@@ -117,20 +110,12 @@ public class TimeSlotsCommand extends Command {
             schedule.replace(m, true);
         }
 
-
-        for (Map.Entry<LocalDateTime, Boolean> entry : schedule.entrySet()) {
-            log.debug(entry.getKey() + " " + entry.getValue());
-        }
-
-//        request.setAttribute("masterRegistrations", masterRegistrations);
-        HttpSession session = request.getSession();
-        log.debug(String.format("role - %s - ", session.getAttribute("role")));
-
-        request.setAttribute("schedule", schedule);
-        request.setAttribute("ms", catalog);
-        request.setAttribute("daysFromNow", daysFromNow);
-        request.setAttribute("dayOfWeek", dayOfWeek);
-        request.setAttribute("currentTime", LocalDateTime.now());
+        request.setAttribute(Constant.SCHEDULE, schedule);
+        request.setAttribute(Constant.MS, catalog);
+        request.setAttribute(DAYS_FROM_NOW, daysFromNow);
+        request.setAttribute(DAY_OF_WEEK, dayOfWeek);
+        request.setAttribute(CURRENT_TIME, LocalDateTime.now());
+        log.debug(END_COMMAND);
         return Path.TIME_SLOTS_LIST_PATH;
     }
 
@@ -143,16 +128,16 @@ public class TimeSlotsCommand extends Command {
     private static List<LocalDateTime> createEmptyDaySchedule(int daysFromNow) {
         List<LocalDateTime> emptySchedule = new ArrayList<>();
         LocalDateTime dateTime = LocalDateTime.now();
-        dateTime = dateTime.minusHours(dateTime.getHour() - 8);
+        dateTime = dateTime.minusHours(dateTime.getHour() - Constant.HOURS_BEFORE_WORKING_DAY_STARTS);
         dateTime = dateTime.minusMinutes(dateTime.getMinute());
         dateTime = dateTime.minusSeconds(dateTime.getSecond());
         dateTime = dateTime.minusNanos(dateTime.getNano());
-        int deltaWorkDay = 24 * daysFromNow;
-        int deltaWorkHours = 18 - dateTime.getHour();
+        int deltaWorkDay = Constant.HOURS_PER_DAY * daysFromNow;
+        int deltaWorkHours = Constant.END_WORKING_DAY_HOUR - dateTime.getHour();
         for (int i = deltaWorkDay; i < deltaWorkDay + deltaWorkHours; i++) {
             LocalDateTime timeCell = dateTime.plusHours(i);
-            if (timeCell.getHour() < 18
-                    && timeCell.getHour() > 8
+            if (timeCell.getHour() < Constant.END_WORKING_DAY_HOUR
+                    && timeCell.getHour() > Constant.HOURS_BEFORE_WORKING_DAY_STARTS
                     && !timeCell.getDayOfWeek().equals(DayOfWeek.SUNDAY)
                     && timeCell.isAfter(LocalDateTime.now())) {
                 emptySchedule.add(timeCell);

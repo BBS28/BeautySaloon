@@ -20,13 +20,13 @@
                         <form method="post" action="/BeautySaloon_war/controller?command=changeLanguage">
                             <input type="hidden" name="language" value="en">
 
-                            <input type="submit" class="dropdown-toggle" value="English">
+                            <input type="submit" class="dropdown-toggle" value=<fmt:message key="english"/>>
                         </form>
                     </li>
                     <li>
                         <form method="post" action="/BeautySaloon_war/controller?command=changeLanguage">
                             <input type="hidden" name="language" value="ru">
-                            <input type="submit" class="dropdown-toggle" value="Russian">
+                            <input type="submit" class="dropdown-toggle" value=<fmt:message key="russian"/>>
                         </form>
                     </li>
                 </ul>

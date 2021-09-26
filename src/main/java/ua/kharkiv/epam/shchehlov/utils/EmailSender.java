@@ -59,7 +59,7 @@ public class EmailSender {
         return true;
     }
 
-    public static void emailProcess(){
+    static void emailProcess(){
         MeetingService meetingService = new MeetingServiceImpl(new MeetingDaoImpl());
         List<Meeting> meetingList = meetingService.getAll();
         meetingList.removeIf(meeting -> !(meeting.getDateTime().getDayOfYear()

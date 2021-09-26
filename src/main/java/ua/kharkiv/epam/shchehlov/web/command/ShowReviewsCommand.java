@@ -15,11 +15,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ShowReviewsCommand extends Command {
     private static final Logger log = Logger.getLogger(ShowMasterServiceCommand.class);
     private static final long serialVersionUID = -8481215465177573283L;
+    private static final String START_COMMAND = "Command ShowReviewsCommand start";
+    private static final String END_COMMAND = "Command ShowReviewsCommand finished";
+    private static final String REVIEW_MAP = "reviewMap";
 
     /**
      * Execution method for ShowReviewsCommand command.
@@ -30,7 +35,7 @@ public class ShowReviewsCommand extends Command {
      */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        log.debug("Command ShowReviewsCommand start");
+        log.debug(START_COMMAND);
         MeetingService meetingService = new MeetingServiceImpl(new MeetingDaoImpl());
         List<Meeting> meetingList = meetingService.getAll();
         meetingList.removeIf(meeting -> meeting.getReviewId() == 0);
@@ -44,8 +49,8 @@ public class ShowReviewsCommand extends Command {
             log.debug(reviewService.getById(reviewId).getText());
         }
 
-        request.setAttribute("reviewMap", reviewMap);
-        log.debug("Command ShowReviewsCommand finished");
+        request.setAttribute(REVIEW_MAP, reviewMap);
+        log.debug(END_COMMAND);
         return Path.SHOW_REVIEW_PATH;
     }
 }

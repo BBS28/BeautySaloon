@@ -17,6 +17,13 @@ public class ClientServiceImpl implements ClientService {
     private static final Logger log = Logger.getLogger(ClientServiceImpl.class);
     private ValidationService validator = new ValidationServiceImpl();
     private final ClientDao clientDao;
+    private static final String INCORRECT_LOGIN = "Incorrect login";
+    private static final String INCORRECT_PASSWORD = "Incorrect password";
+    private static final String DIFFERENT_PASSWORD = "Passwords are different";
+    private static final String INCORRECT_EMAIL = "Incorrect email";
+    private static final String LOGIN_EXISTS = "Client with this login is already exists";
+    private static final String EMAIL_EXISTS = "Client with this email is already registered";
+    private static final String CLIENT_AFTER_HASH = "client after hash : ";
 
     public ClientServiceImpl(ClientDao clientDao) {
         this.clientDao = clientDao;
@@ -50,16 +57,16 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Client register(String login, String password, String repeatPassword, String name, String surname, String email) {
         if (!validator.isLoginValid(login)) {
-            throw new AccountDataException("Incorrect login");
+            throw new AccountDataException(INCORRECT_LOGIN);
         }
         if (!validator.isPasswordValid(password) || !validator.isPasswordValid(repeatPassword)) {
-            throw new AccountDataException("Incorrect password");
+            throw new AccountDataException(INCORRECT_PASSWORD);
         }
         if (!password.equals(repeatPassword)) {
-            throw new AccountDataException("Passwords are different");
+            throw new AccountDataException(DIFFERENT_PASSWORD);
         }
         if (!validator.isEmailValid(email.toLowerCase())) {
-            throw new AccountDataException("Incorrect email");
+            throw new AccountDataException(INCORRECT_EMAIL);
         }
 
         AccountService accountService = new AccountServiceImpl(new AccountDaoImpl());
@@ -67,10 +74,10 @@ public class ClientServiceImpl implements ClientService {
 
         for (Account account : accountList) {
             if (login.equals(account.getLogin())) {
-                throw new AccountDataException("Client with this login is already exists");
+                throw new AccountDataException(LOGIN_EXISTS);
             }
             if (email.equals(account.getEmail())) {
-                throw new AccountDataException("Client with this email is already registered");
+                throw new AccountDataException(EMAIL_EXISTS);
             }
         }
 
@@ -81,7 +88,7 @@ public class ClientServiceImpl implements ClientService {
         client.setSurname(surname);
         client.setEmail(email);
 
-        log.debug("client after hash : " +  client);
+        log.debug(CLIENT_AFTER_HASH +  client);
         client = insert(client);
 
         return client;

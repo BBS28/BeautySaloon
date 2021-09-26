@@ -13,4 +13,3 @@
 		url="jdbc:mysql://localhost:3306/beauty_saloon_db?serverTimezone=UTC"/>
 
 </Context>
-<!--		jdbc:mysql://localhost/db?useUnicode=true&serverTimezone=UTC-->

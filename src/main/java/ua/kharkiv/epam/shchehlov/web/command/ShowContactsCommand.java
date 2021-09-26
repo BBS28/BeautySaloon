@@ -11,6 +11,8 @@ import java.io.IOException;
 public class ShowContactsCommand extends Command {
     private static final Logger log = Logger.getLogger(ShowContactsCommand.class);
     private static final long serialVersionUID = 848549821177573283L;
+    private static final String START_COMMAND = "Command ShowContactsCommand start";
+    private static final String END_COMMAND = "Command ShowContactsCommand finished";
 
     /**
      * Execution method for ShowContactsCommand command.
@@ -21,8 +23,8 @@ public class ShowContactsCommand extends Command {
      */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        log.debug("Command ShowContactsCommand start");
-        log.debug("Command ShowContactsCommand finished");
+        log.debug(START_COMMAND);
+        log.debug(END_COMMAND);
         return Path.CONTACTS_PATH;
     }
 }

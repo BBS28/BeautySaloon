@@ -1,10 +1,10 @@
 package ua.kharkiv.epam.shchehlov.services.impl;
 
 import org.apache.log4j.Logger;
+import ua.kharkiv.epam.shchehlov.constant.Constant;
 import ua.kharkiv.epam.shchehlov.dao.AccountDao;
 import ua.kharkiv.epam.shchehlov.entity.Account;
 import ua.kharkiv.epam.shchehlov.exceptions.AccountDataException;
-import ua.kharkiv.epam.shchehlov.security.SecurePassword;
 import ua.kharkiv.epam.shchehlov.security.VerifyProvidedPassword;
 import ua.kharkiv.epam.shchehlov.services.AccountService;
 import ua.kharkiv.epam.shchehlov.services.ValidationService;
@@ -15,6 +15,8 @@ public class AccountServiceImpl implements AccountService {
     private static final Logger log = Logger.getLogger(AccountServiceImpl.class);
     private ValidationService validator = new ValidationServiceImpl();
     private final AccountDao accountDao;
+    private static final String INVALID_INPUT = "Invalid input";
+    private static final String INCORRECT_LOGIN_OR_PASSWORD = "Incorrect login or password";
 
     public AccountServiceImpl(AccountDao accountDao) {
         this.accountDao = accountDao;
@@ -28,15 +30,15 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account login(String login, String password) {
         if (!validator.isLoginValid(login) || !validator.isPasswordValid(password)) {
-            log.debug(String.format("Invalid input, %s, %s", validator.isLoginValid(login), validator.isPasswordValid(password)));
-            throw new AccountDataException("Invalid input");
+            log.debug(INVALID_INPUT + Constant.POINTER + validator.isLoginValid(login) + " " + validator.isPasswordValid(password));
+            throw new AccountDataException(INVALID_INPUT);
         }
         Account account = getByLogin(login);
-        log.debug(String.format("account %s", account));
+        log.debug(Constant.ACCOUNT + Constant.POINTER + account);
 
-        if(account == null || !VerifyProvidedPassword.isPasswordCorrect(password, account)) {
-            log.debug(String.format("Incorrect login or password, %s, %s", account == null, account.getPassword().equals(password)));
-            throw new AccountDataException("Incorrect login or password");
+        if (account == null || !VerifyProvidedPassword.isPasswordCorrect(password, account)) {
+            log.debug(INCORRECT_LOGIN_OR_PASSWORD + Constant.POINTER + (account == null) + " " + account.getPassword().equals(password));
+            throw new AccountDataException(INCORRECT_LOGIN_OR_PASSWORD);
         }
         return account;
     }

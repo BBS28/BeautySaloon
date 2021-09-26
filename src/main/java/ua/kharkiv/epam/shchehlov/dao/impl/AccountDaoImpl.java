@@ -1,8 +1,8 @@
 package ua.kharkiv.epam.shchehlov.dao.impl;
 
 import org.apache.log4j.Logger;
-import ua.kharkiv.epam.shchehlov.dao.AccountDao;
 import ua.kharkiv.epam.shchehlov.constant.Constant;
+import ua.kharkiv.epam.shchehlov.dao.AccountDao;
 import ua.kharkiv.epam.shchehlov.dao.db.DBManager;
 import ua.kharkiv.epam.shchehlov.entity.Account;
 import ua.kharkiv.epam.shchehlov.entity.Role;

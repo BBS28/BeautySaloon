@@ -3,6 +3,7 @@ package ua.kharkiv.epam.shchehlov.filter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import ua.kharkiv.epam.shchehlov.constant.Constant;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
@@ -21,16 +22,13 @@ public class LocaleFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         log.debug("LocaleFilter init starts");
-
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         log.debug("LocaleFilter doFilter starts");
         Locale locale = defineLocale(servletRequest);
-
         ServletRequest requestWrapper = setLocaleInRequest((HttpServletRequest) servletRequest, locale);
-
         filterChain.doFilter(requestWrapper, servletResponse);
     }
 
@@ -54,14 +52,14 @@ public class LocaleFilter implements Filter {
     }
 
     private Locale defineLocale(ServletRequest request) {
-        String strLocale = request.getParameter("language");
+        String strLocale = request.getParameter(Constant.LANGUAGE);
         Locale locale = null;
         if (StringUtils.isNotBlank(strLocale)) {
             locale = Locale.forLanguageTag(strLocale);
-            log.debug(String.format("locale - %s", locale));
-        } else if (Objects.nonNull(((HttpServletRequest) request).getSession(true).getAttribute("locale"))) {
-            locale = (Locale) ((HttpServletRequest) request).getSession(true).getAttribute("locale");
-            log.debug(String.format("locale - %s", locale));
+            log.debug(Constant.LOCALE + Constant.POINTER + locale);
+        } else if (Objects.nonNull(((HttpServletRequest) request).getSession(true).getAttribute(Constant.LOCALE))) {
+            locale = (Locale) ((HttpServletRequest) request).getSession(true).getAttribute(Constant.LOCALE);
+            log.debug(Constant.LOCALE + Constant.POINTER + locale);
         } else {
             Enumeration<Locale> locales = request.getLocales();
             while (locales.hasMoreElements()) {
@@ -74,10 +72,10 @@ public class LocaleFilter implements Filter {
             if (Objects.isNull(locale)) {
                 locale = Locale.ENGLISH;
             }
-            log.debug(String.format("locale - %s", locale));
+            log.debug(Constant.LOCALE + Constant.POINTER + locale);
         }
-        ((HttpServletRequest) request).getSession().setAttribute("locale", locale);
-        log.debug(((HttpServletRequest) request).getSession().getAttribute("locale"));
+        ((HttpServletRequest) request).getSession().setAttribute(Constant.LOCALE, locale);
+        log.debug(((HttpServletRequest) request).getSession().getAttribute(Constant.LOCALE));
         return locale;
     }
 

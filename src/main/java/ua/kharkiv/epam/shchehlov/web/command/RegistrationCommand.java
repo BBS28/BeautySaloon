@@ -1,6 +1,7 @@
 package ua.kharkiv.epam.shchehlov.web.command;
 
 import org.apache.log4j.Logger;
+import ua.kharkiv.epam.shchehlov.constant.Constant;
 import ua.kharkiv.epam.shchehlov.constant.Path;
 import ua.kharkiv.epam.shchehlov.dao.impl.ClientDaoImpl;
 import ua.kharkiv.epam.shchehlov.entity.Client;
@@ -16,6 +17,10 @@ import java.io.IOException;
 public class RegistrationCommand extends Command {
     private static final long serialVersionUID = 8481491669171573383L;
     private static final Logger log = Logger.getLogger(RegistrationCommand.class);
+    private static final String START_COMMAND = "Command RegistrationCommand start";
+    private static final String END_COMMAND = "Command RegistrationCommand finished";
+    private static final String CASE_POST = "Case with Method post";
+    private static final String CASE_GET = "Case with Method get";
 
     /**
      * Execution method for RegistrationCommand command.
@@ -26,31 +31,32 @@ public class RegistrationCommand extends Command {
      */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        log.debug("Command RegistrationCommand start");
-        if ("POST".equalsIgnoreCase(request.getMethod())) {
-            log.debug("Command RegistrationCommand method post start");
+        log.debug(START_COMMAND);
+        if (Constant.POST_METHOD.equalsIgnoreCase(request.getMethod())) {
+            log.debug(CASE_POST);
             try {
-                String login = request.getParameter("login");
-                String password = request.getParameter("password");
-                String repeatPassword = request.getParameter("repeatPassword");
-                String name = request.getParameter("name");
-                String surname = request.getParameter("surname");
-                String email = request.getParameter("email");
+                String login = request.getParameter(Constant.ACCOUNT_LOGIN);
+                String password = request.getParameter(Constant.ACCOUNT_PASSWORD);
+                String repeatPassword = request.getParameter(Constant.ACCOUNT_REPEAT_PASSWORD);
+                String name = request.getParameter(Constant.ACCOUNT_NAME);
+                String surname = request.getParameter(Constant.ACCOUNT_SURNAME);
+                String email = request.getParameter(Constant.ACCOUNT_EMAIL);
 
                 ClientService clientService = new ClientServiceImpl(new ClientDaoImpl());
                 Client client = clientService.register(login, password, repeatPassword, name, surname, email);
                 log.info(String.format("client %s created", client.getLogin()));
-                request.setAttribute("requestTypePost", "post");
+                request.setAttribute(Constant.REQUEST_TYPE_POST, Constant.POST);
                 log.debug("Command RegistrationCommand method post finished");
-                return "/controller?command=logIn";
+                return Path.COMMAND_LOGIN;
 
             } catch (AccountDataException ex) {
                 log.warn(ex.getMessage(), ex);
-                request.setAttribute("warn", ex.getMessage());
-                return "/WEB-INF/jsp/registration.jsp";
+                request.setAttribute(Constant.WARN, ex.getMessage());
+                return Path.REGISTRATION_PATH;
             }
         } else {
-            log.debug("Command RegistrationCommand method get");
+            log.debug(CASE_GET);
+            log.debug(END_COMMAND);
             return Path.REGISTRATION_PATH;
         }
     }
