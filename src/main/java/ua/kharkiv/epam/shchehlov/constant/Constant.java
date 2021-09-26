@@ -46,10 +46,17 @@ public class Constant {
     public static final String MEETING_REVIEW_ID = "review_id";
     public static final String MEETING_MASTER_SERVICE_ID = "master_service_id";
     public static final String MEETING_MEET_TIME = "meet_time";
+    public static final String DATE_TIME_PATTERN ="uuuu-MM-dd HH:mm:ss";
 
     public static final String ERROR_CANNOT_OBTAIN_CATEGORIES = "Cannot obtain categories";
     public static final String ERROR_UNAUTHORISED_USER = "Unauthorised user";
-    public static final String DATE_TIME_PATTERN ="uuuu-MM-dd HH:mm:ss";
+    public static final String ERROR_CANNOT_OBTAIN_DATASOURCE = "Cannot obtain DataSource";
+    public static final String ERROR_CANNOT_OBTAIN_CONNECTION = "Cannot obtain Connection";
+    public static final String ERROR_CANNOT_CLOSE_CONNECTION = "Cannot close Connection";
+    public static final String ERROR_CANNOT_CLOSE_STATEMENT = "Cannot close Statement";
+    public static final String ERROR_CANNOT_CLOSE_RESULT_SET = "Cannot close resultSet";
+    public static final String ERROR_CANNOT_ROLLBACK_TRANSACTION = "Cannot rollback transaction";
+
 
     public static final int END_WORKING_DAY_HOUR = 18;
     public static final int HOURS_PER_DAY = 24;

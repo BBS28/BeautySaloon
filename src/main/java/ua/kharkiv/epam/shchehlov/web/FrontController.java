@@ -63,7 +63,5 @@ public class FrontController extends HttpServlet {
             log.debug(FORWARD_PROCESS);
             req.getRequestDispatcher(forward).forward(req, resp);
         }
-
-
     }
 }

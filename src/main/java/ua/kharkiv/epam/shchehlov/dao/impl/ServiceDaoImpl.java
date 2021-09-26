@@ -183,5 +183,4 @@ public class ServiceDaoImpl implements ServiceDao {
         service.setPrice(rs.getDouble(Constant.SERVICE_PRICE));
         return service;
     }
-
 }

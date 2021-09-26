@@ -1,6 +1,7 @@
 package ua.kharkiv.epam.shchehlov.dao.db;
 
 import org.apache.log4j.Logger;
+import ua.kharkiv.epam.shchehlov.constant.Constant;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -30,7 +31,7 @@ public class DBManager {
             Context envContext = (Context) initContext.lookup("java:comp/env");
             ds = (DataSource) envContext.lookup("jdbc/BSdb");
         } catch (NamingException ex) {
-            log.error("Cannot obtain DataSource", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_DATASOURCE, ex);
         }
     }
 
@@ -39,7 +40,7 @@ public class DBManager {
         try {
             connection = ds.getConnection();
         } catch (SQLException ex) {
-            log.error("Cannot obtain Connection", ex);
+            log.error(Constant.ERROR_CANNOT_OBTAIN_CONNECTION, ex);
         }
         return connection;
     }
@@ -49,7 +50,7 @@ public class DBManager {
             try {
                 con.close();
             } catch (SQLException ex) {
-                log.error("Cannot close Connection", ex);
+                log.error(Constant.ERROR_CANNOT_CLOSE_CONNECTION, ex);
             }
         }
     }
@@ -59,7 +60,7 @@ public class DBManager {
             try {
                 stmt.close();
             } catch (SQLException ex) {
-                log.error("Cannot close Statement", ex);
+                log.error(Constant.ERROR_CANNOT_CLOSE_STATEMENT, ex);
             }
         }
     }
@@ -69,7 +70,7 @@ public class DBManager {
             try {
                 rs.close();
             } catch (SQLException ex) {
-                log.error("Cannot close resultSet", ex);
+                log.error(Constant.ERROR_CANNOT_CLOSE_RESULT_SET, ex);
             }
         }
     }
@@ -90,9 +91,8 @@ public class DBManager {
             try {
                 con.rollback();
             } catch (SQLException ex) {
-                log.error("Cannot rollback transaction", ex);
+                log.error(Constant.ERROR_CANNOT_ROLLBACK_TRANSACTION, ex);
             }
         }
     }
-
 }

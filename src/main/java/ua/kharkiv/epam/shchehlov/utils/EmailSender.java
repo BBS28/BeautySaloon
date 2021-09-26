@@ -15,6 +15,11 @@ import java.util.Properties;
 
 public class EmailSender {
     private static final Logger log = Logger.getLogger(EmailSender.class);
+    private static final String EMAIL_SUBJECT = "Отзыв";
+    private static final String EMAIL_TEXT = "Уважаемый(ая)  %s !%n " +
+            "Вчера вы посетили наш салон. " +
+            "Будьте добры, оставьте отзыв о полученной услуге и оцените работу мастера!";
+    private static final String EMAIL_SENT = "Email Sent successfully....";
 
     private static boolean sendEmail(String emailTo, String name) {
         Properties properties = new Properties();
@@ -26,14 +31,12 @@ public class EmailSender {
         String emailFrom = "beauty.saloon.epam@gmail.com";
         String password = "2709projecT";
 
-
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(emailFrom, password);
             }
         });
-
 
         try {
             MimeMessage message = new MimeMessage(session); // email message
@@ -42,16 +45,14 @@ public class EmailSender {
 
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(emailTo));
 
-            message.setSubject("Отзыв"); // subject line
+            message.setSubject(EMAIL_SUBJECT); // subject line
 
             // actual mail body
-            message.setText("Уважаемый " + name + "!\n" +
-                    "Вчера вы посетили наш салон. " +
-                    "Будьте добры, оставьте отзыв о полученной услуге и оцените работу мастера!");
+            message.setText(String.format(EMAIL_TEXT, name));
 
             // Send message
             Transport.send(message);
-            log.debug("Email Sent successfully....");
+            log.debug(EMAIL_SENT);
         } catch (MessagingException ex) {
             log.error(ex.getMessage(), ex);
             ex.printStackTrace();
@@ -69,7 +70,8 @@ public class EmailSender {
 
         for (Meeting m : meetingList) {
             String clientName = m.getClient().getName();
-            boolean result = sendEmail("bbscheglov@gmail.com", clientName);
+            //change this address to m.getClient().getEmail()
+            boolean result = sendEmail("*******@gmail.com", clientName);
             log.debug(result);
         }
     }

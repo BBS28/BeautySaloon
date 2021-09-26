@@ -3,9 +3,6 @@ package ua.kharkiv.epam.shchehlov.security;
 import org.apache.log4j.Logger;
 import ua.kharkiv.epam.shchehlov.entity.Account;
 
-/**
- *
- */
 public class VerifyProvidedPassword {
 
     private static final Logger log = Logger.getLogger(VerifyProvidedPassword.class);
